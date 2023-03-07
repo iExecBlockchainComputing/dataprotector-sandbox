@@ -1,0 +1,16 @@
+.App {
+  font-family: sans-serif;
+  text-align: center;
+}
+
+.my-box {
+  margin-top: 199px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.form-box {
+  margin-top: 100px;
+  min-width: 500px;
+}
