@@ -1,11 +1,11 @@
 {
-  "name": "react-typescript",
+  "name": "iexec-data-protector",
   "version": "1.0.0",
-  "description": "React and TypeScript example starter project",
+  "description": "Securely protect your data by creating a confidential NFT (cNFT). You'll have complete control over access to your data, keeping it private and managing its use by other applications.",
   "keywords": [
-    "typescript",
-    "react",
-    "starter"
+    "iExec",
+    "NFT",
+    "cNFT"
   ],
   "main": "src/index.tsx",
   "dependencies": {
