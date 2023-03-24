@@ -1,14 +1,30 @@
-import { Box, Tab, Tabs, Typography } from '@mui/material'
+import {
+  AppBar,
+  Box,
+  Button,
+  Container,
+  Tab,
+  Tabs,
+  Toolbar,
+  Typography,
+} from '@mui/material'
+import { useWeb3Modal } from '@web3modal/react'
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
+import { useAccount, useConnect, useDisconnect } from 'wagmi'
 
 export default function Naviguate() {
   const [value, setValue] = useState('one')
   const naviguate = useNavigate()
+  const { error } = useConnect()
+  const { address, isConnecting, isConnected, isDisconnected } = useAccount()
+  const { open } = useWeb3Modal()
+  const { disconnect } = useDisconnect()
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
     setValue(newValue)
   }
+
   useEffect(() => {
     if (value === 'one') {
       naviguate('/createCNFT')
@@ -17,28 +33,70 @@ export default function Naviguate() {
     }
   }, [value])
 
+  const shortAddress = (address: string) => {
+    return address.slice(0, 6) + '...' + address.slice(-4)
+  }
+
   return (
-    <Box className="my-box" sx={{ mt: 20 }}>
-      <Typography component="h1" variant="h5">
-        Welcome on iExec sandbox
-      </Typography>
-      <Typography variant="body2" textAlign="center">
-        This example empathise what can be done with the SDK method
-      </Typography>
-      <Box className="form-box" sx={{ mt: 10 }}></Box>
-      <Tabs
-        value={value}
-        onChange={handleChange}
-        aria-label="wrapped label tabs example"
-      >
-        <Tab value="one" label="Create CNFT" wrapped />
-        <Tab value="two" label="Grant & Revoke Access" />
-      </Tabs>
-      <Box className="my-box">
-        <Box className="form-box">
-          <Outlet />
-        </Box>
+    <Container disableGutters>
+      {isConnected && (
+        <AppBar
+          position="static"
+          elevation={0}
+          sx={{ backgroundColor: 'transparent', width: '100%' }}
+        >
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Typography
+              sx={{
+                flexGrow: 1,
+                textAlign: 'right',
+                mr: 2,
+                fontStyle: 'italic',
+              }}
+            >
+              {shortAddress(address as string)}
+            </Typography>
+            <Button variant="contained" onClick={() => disconnect()}>
+              Disconnect
+            </Button>
+          </Toolbar>
+        </AppBar>
+      )}
+      <Box className="my-box" sx={{ mt: 20 }}>
+        {isConnected && (
+          <>
+            <Tabs
+              value={value}
+              onChange={handleChange}
+              aria-label="wrapped label tabs example"
+              sx={{ mt: 10 }}
+            >
+              <Tab value="one" label="Create CNFT" />
+              <Tab value="two" label="Grant & Revoke Access" />
+            </Tabs>
+            <Box className="my-box">
+              <Box className="form-box">
+                <Outlet />
+              </Box>
+            </Box>
+          </>
+        )}
+
+        {isDisconnected && (
+          <Box sx={{ mt: 10 }}>
+            <Button variant="contained" onClick={() => open()}>
+              Connect
+            </Button>
+            {error && <Typography>{error.message}</Typography>}
+            {isConnecting && <Typography>Connecting…</Typography>}
+            {isDisconnected && (
+              <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
+                Connect your Wallet
+              </Typography>
+            )}
+          </Box>
+        )}
       </Box>
-    </Box>
+    </Container>
   )
 }

@@ -1,4 +1,4 @@
-import { PrivateData } from "../../App";
+import { PrivateData } from "../../index";
 
 const revokeAccessFunc = async (accessHash: string) => {
     //const { tx } = await PrivateData.revokeAccess(accessHash)

@@ -15,23 +15,26 @@
     "@mui/material": "latest",
     "@types/react": "latest",
     "@types/react-dom": "latest",
-    "ethers": "^6.2.0",
-    "private-data-protector-testing-sdk": "1.0.1",
+    "@wagmi/connectors": "^0.3.8",
+    "@web3modal/ethereum": "^2.2.2",
+    "@web3modal/react": "^2.2.2",
+    "ethers": "^5.7",
+    "private-data-protector-testing-sdk": "1.0.7",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.9.0",
     "react-scripts": "5.0.1",
-    "typescript": "latest"
+    "typescript": "^4.9.5",
+    "wagmi": "^0.12.6"
   },
   "devDependencies": {
-    "@types/react": "18.0.25",
-    "@types/react-dom": "18.0.9",
+    "@types/react": "18.0.28",
+    "@types/react-dom": "18.0.11",
     "constants-browserify": "^1.0.0",
     "crypto-browserify": "^3.12.0",
     "process": "^0.11.10",
     "react-app-rewired": "^2.2.1",
-    "stream-browserify": "^3.0.0",
-    "typescript": "4.4.2"
+    "stream-browserify": "^3.0.0"
   },
   "scripts": {
     "start": "react-app-rewired start",

@@ -1,7 +1,7 @@
 import { Box, Button, CircularProgress, TextField } from '@mui/material'
-import { isAddress } from 'ethers'
 import { useState } from 'react'
 import revokeAccessFunc from './RevokeAccess'
+import { isAddress } from 'ethers/lib/utils.js'
 
 export default function RevokeAccess() {
   //global state

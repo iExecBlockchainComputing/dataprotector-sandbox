@@ -8,9 +8,9 @@ import {
   Typography,
 } from '@mui/material'
 import { useState } from 'react'
-import { isAddress } from 'ethers'
 import RevokeAccess from '../revokeAccess/RevokeAccess'
 import grantAccessFunc from './GrantAccess'
+import { isAddress } from 'ethers/lib/utils.js'
 
 export default function GrantAccess() {
   //global state

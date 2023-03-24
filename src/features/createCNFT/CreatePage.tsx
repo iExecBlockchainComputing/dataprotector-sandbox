@@ -20,7 +20,8 @@ export default function CreatePage() {
   const [dataType, setDataType] = useState('')
   const [email, setEmail] = useState('')
   const [age, setAge] = useState('')
-  const [file, setFile] = useState('')
+  const [filePath, setFilePath] = useState('')
+  const [file, setFile] = useState<File>()
   const [cnftName, setCnftName] = useState('')
 
   const [isValidEmail, setIsValidEmail] = useState(true)
@@ -40,24 +41,29 @@ export default function CreatePage() {
     setAge(event.target.value)
   }
   const handleFileChange = (event: any) => {
-    setFile(event.target.value)
+    setFilePath(event.target.value)
+    setFile(event.target.files?.[0])
   }
   const handleCnftNameChange = (event: any) => {
     setCnftName(event.target.value)
   }
 
-  function create_ArrayBuffer(file: any): Promise<ArrayBuffer> {
-    return new Promise((resolve, reject) => {
-      const fileReader = new FileReader()
-      fileReader.onerror = () => {
-        fileReader.abort()
-        reject(new DOMException('Error parsing input file.'))
-      }
-      fileReader.onload = () => {
-        resolve(fileReader.result as ArrayBuffer)
-      }
-      fileReader.readAsArrayBuffer(file)
-    })
+  async function create_ArrayBuffer(file?: File): Promise<ArrayBuffer> {
+    const fileReader = new FileReader()
+    if (file) {
+      return new Promise((resolve, reject) => {
+        fileReader.onerror = () => {
+          fileReader.abort()
+          reject(new DOMException('Error parsing input file.'))
+        }
+        fileReader.onload = () => {
+          resolve(fileReader.result as ArrayBuffer)
+        }
+        fileReader.readAsArrayBuffer(file)
+      })
+    } else {
+      return Promise.reject(new Error('No file selected'))
+    }
   }
 
   const handleSubmit = async (event: any) => {
@@ -77,8 +83,8 @@ export default function CreatePage() {
     if (dataType && cnftName && ((isValidEmail && email) || age || file)) {
       try {
         setLoading(true)
-        //const response = await createCNFT(data!, cnftName)
-        setCNftAddress('0x123456789')
+        const response = await createCNFT(data!, cnftName)
+        setCNftAddress(response)
         setError('')
       } catch (error) {
         setError(String(error))
@@ -147,14 +153,14 @@ export default function CreatePage() {
           onChange={handleFileChange}
           sx={{ mt: 3 }}
         >
-          {!file ? 'Upload' : 'Updated File'}
-          <input hidden accept="image/*" multiple type="file" />
+          {!filePath ? 'Upload' : 'Updated File'}
+          <input hidden multiple type="file" />
         </Button>
       )}
-      {file && dataType === 'file' && (
+      {filePath && dataType === 'file' && (
         <Grid container columnSpacing={1} sx={{ mt: 1 }}>
           <Grid item>
-            <Typography>{file.split('\\').slice(-1)}</Typography>
+            <Typography>{filePath.split('\\').slice(-1)}</Typography>
           </Grid>
           <Grid item>
             <Verified color="success" />

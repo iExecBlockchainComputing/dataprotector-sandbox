@@ -1,4 +1,4 @@
-import { PrivateData } from "../../App";
+import { PrivateData } from "../../index";
 
 
 const grantAccessFunc = async (cNFTAddress: string, numberOfAccess: number, appRestrictAddress: string, requesterRestrictAddress: string) => {
