@@ -22,7 +22,7 @@ export default function CreatePage() {
   const [age, setAge] = useState('')
   const [filePath, setFilePath] = useState('')
   const [file, setFile] = useState<File>()
-  const [cnftName, setCnftName] = useState('')
+  const [name, setName] = useState('')
 
   const [isValidEmail, setIsValidEmail] = useState(true)
   const [loading, setLoading] = useState(false)
@@ -44,8 +44,8 @@ export default function CreatePage() {
     setFilePath(event.target.value)
     setFile(event.target.files?.[0])
   }
-  const handleCnftNameChange = (event: any) => {
-    setCnftName(event.target.value)
+  const handleNameChange = (event: any) => {
+    setName(event.target.value)
   }
 
   async function create_ArrayBuffer(file?: File): Promise<ArrayBuffer> {
@@ -80,10 +80,10 @@ export default function CreatePage() {
         break
     }
 
-    if (dataType && cnftName && ((isValidEmail && email) || age || file)) {
+    if (dataType && name && ((isValidEmail && email) || age || file)) {
       try {
         setLoading(true)
-        const response = await createCNFT(data!, cnftName)
+        const response = await createCNFT(data!, name)
         setCNftAddress(response)
         setError('')
       } catch (error) {
@@ -108,6 +108,7 @@ export default function CreatePage() {
           value={dataType}
           onChange={handleDataTypeChange}
           label="Select your data type"
+          sx={{ textAlign: 'left' }}
         >
           {dataTypes.map((item) => (
             <MenuItem key={item.value} value={item.value}>
@@ -170,11 +171,11 @@ export default function CreatePage() {
       {dataType && (
         <TextField
           fullWidth
-          id="cnft-name"
-          label="cNFT name"
+          id="name"
+          label="Name"
           variant="outlined"
-          value={cnftName}
-          onChange={handleCnftNameChange}
+          value={name}
+          onChange={handleNameChange}
           sx={{ mt: 3 }}
         />
       )}

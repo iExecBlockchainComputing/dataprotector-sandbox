@@ -71,7 +71,7 @@ export default function Naviguate() {
               aria-label="wrapped label tabs example"
               sx={{ mt: 10 }}
             >
-              <Tab value="one" label="Create CNFT" />
+              <Tab value="one" label="Protect your data" />
               <Tab value="two" label="Grant & Revoke Access" />
             </Tabs>
             <Box className="my-box">
