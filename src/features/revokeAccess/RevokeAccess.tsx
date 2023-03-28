@@ -1,29 +1,46 @@
-import { Box, Button, CircularProgress, TextField } from '@mui/material'
+import {
+  Alert,
+  Box,
+  Button,
+  CircularProgress,
+  TextField,
+  Typography,
+} from '@mui/material'
 import { useState } from 'react'
-import revokeAccessFunc from './RevokeAccess'
+import revokeAccessFunc from './revokeAccessFunc'
 import { isAddress } from 'ethers/lib/utils.js'
+import { useAppSelector } from '../../app/hooks'
+import {
+  selectProtectedDataCreated,
+  selectUserAddressRestricted,
+} from '../../app/appSlice'
 
 export default function RevokeAccess() {
   //global state
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [revokeAccess, setRevokeAccess] = useState('')
+  const [revokeAccess, setRevokeAccess] = useState([''])
+  const grantAccessAddress = useAppSelector(selectProtectedDataCreated)
+  const userAddress = useAppSelector(selectUserAddressRestricted)
 
   //for order state
-  const [orderAddress, setOrderAddress] = useState('')
-  const [isValidOrderAddress, setIsValidOrderAddress] = useState(true)
+  const [dataProtectedAddress, setDataProtectedAddress] = useState(
+    grantAccessAddress,
+  )
+  const [
+    isValidDataProtectedAddress,
+    setIsValidDataProtectedAddress,
+  ] = useState(true)
 
   //handle function
   const handleOrderAddressChange = (event: any) => {
-    setOrderAddress(event.target.value)
-    if (!isAddress(orderAddress)) {
-      setIsValidOrderAddress(false)
-    }
+    setDataProtectedAddress(event.target.value)
+    setIsValidDataProtectedAddress(isAddress(event.target.value))
+    setIsValidDataProtectedAddress(true)
   }
-  const handleSubmit = () => {
-    console.log('submit')
-    // const {tx} = revokeAccessFunc(orderAddress)
-    // setRevokeAccess(tx)
+  const handleSubmit = async () => {
+    const tx = await revokeAccessFunc(dataProtectedAddress, userAddress)
+    setRevokeAccess(tx)
     setLoading(true)
   }
 
@@ -33,15 +50,15 @@ export default function RevokeAccess() {
         required
         fullWidth
         id="dataorderAddresssetAddress"
-        label="Order Address"
+        label="Data Address"
         variant="outlined"
         sx={{ mt: 3 }}
-        value={orderAddress}
+        value={dataProtectedAddress}
         onChange={handleOrderAddressChange}
         type="text"
-        error={!isValidOrderAddress}
+        error={!isValidDataProtectedAddress}
         helperText={
-          !isValidOrderAddress && 'Please enter a valid dataset address'
+          !isValidDataProtectedAddress && 'Please enter a valid dataset address'
         }
       />
       {!loading && (
@@ -50,13 +67,23 @@ export default function RevokeAccess() {
           onClick={handleSubmit}
           variant="contained"
         >
-          Grant Access
+          Revoke Access
         </Button>
       )}
       {loading && (
         <CircularProgress
           sx={{ display: 'block', margin: '20px auto' }}
         ></CircularProgress>
+      )}
+      {revokeAccess.length && !error && (
+        <>
+          <Alert sx={{ mt: 3, mb: 2 }} severity="success">
+            <Typography variant="h6">
+              You have successfully revoke access!
+            </Typography>
+          </Alert>
+          <RevokeAccess />
+        </>
       )}
     </Box>
   )

@@ -1,6 +1,5 @@
 import { useState } from 'react'
 import {
-  Box,
   TextField,
   Typography,
   InputLabel,
@@ -15,37 +14,78 @@ import {
 } from '@mui/material'
 import { Verified } from '@mui/icons-material'
 import createCNFT from './createCnftFunc'
+import { useAppDispatch, useAppSelector } from '../../app/hooks'
+import {
+  selectProtectedDataCreated,
+  setLastProtectedDataCreated,
+} from '../../app/appSlice'
+import {
+  selectName,
+  selectFilePath,
+  selectFile,
+  selectEmail,
+  selectAge,
+  selectDataType,
+  setMemoName,
+  setMemoFilePath,
+  setMemoFile,
+  setMemoEmail,
+  setMemoAge,
+  setMemoDataType,
+} from '../../app/dataProtectedSlice'
 
 export default function CreatePage() {
-  const [dataType, setDataType] = useState('')
-  const [email, setEmail] = useState('')
-  const [age, setAge] = useState('')
-  const [filePath, setFilePath] = useState('')
-  const [file, setFile] = useState<File>()
-  const [name, setName] = useState('')
-
-  const [isValidEmail, setIsValidEmail] = useState(true)
+  //global state
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const dispatch = useAppDispatch()
+  const protectedDataAddress = useAppSelector(selectProtectedDataCreated)
+  const [cNftAddress, setCNftAddress] = useState(protectedDataAddress)
+  const memoName = useAppSelector(selectName)
+  const memoFilePath = useAppSelector(selectFilePath)
+  const memoFile = useAppSelector(selectFile)
+  const memoEmail = useAppSelector(selectEmail)
+  const memoAge = useAppSelector(selectAge)
+  const memoDataType = useAppSelector(selectDataType)
 
-  const [cNftAddress, setCNftAddress] = useState('')
+  //for name et dataType
+  const [name, setName] = useState(memoName)
+  const [dataType, setDataType] = useState(memoDataType)
 
+  //for email
+  const [email, setEmail] = useState(memoEmail)
+  const [isValidEmail, setIsValidEmail] = useState(true)
+
+  //for age
+  const [age, setAge] = useState(memoAge)
+
+  //for file
+  const [filePath, setFilePath] = useState(memoFilePath)
+  const [file, setFile] = useState<File | undefined>(memoFile)
+
+  //handle functions
   const handleDataTypeChange = (event: any) => {
     setDataType(event.target.value)
+    dispatch(setMemoDataType(event.target.value))
   }
   const handleEmailChange = (event: any) => {
     setEmail(event.target.value)
     setIsValidEmail(event.target.validity.valid)
+    dispatch(setMemoEmail(event.target.value))
   }
   const handleAgeChange = (event: any) => {
     setAge(event.target.value)
+    dispatch(setMemoAge(event.target.value))
   }
   const handleFileChange = (event: any) => {
     setFilePath(event.target.value)
     setFile(event.target.files?.[0])
+    dispatch(setMemoFilePath(event.target.value))
+    dispatch(setMemoFile(event.target.files?.[0]))
   }
   const handleNameChange = (event: any) => {
     setName(event.target.value)
+    dispatch(setMemoName(event.target.value))
   }
 
   async function create_ArrayBuffer(file?: File): Promise<ArrayBuffer> {
@@ -70,10 +110,10 @@ export default function CreatePage() {
     let data: string | ArrayBuffer
     switch (dataType) {
       case 'email':
-        data = email
+        data = email!
         break
       case 'age':
-        data = age
+        data = age!
         break
       case 'file':
         data = await create_ArrayBuffer(file)
@@ -83,8 +123,9 @@ export default function CreatePage() {
     if (dataType && name && ((isValidEmail && email) || age || file)) {
       try {
         setLoading(true)
-        const response = await createCNFT(data!, name)
-        setCNftAddress(response)
+        const ProtectedDataAddress = await createCNFT(data!, name)
+        setCNftAddress(ProtectedDataAddress)
+        dispatch(setLastProtectedDataCreated(ProtectedDataAddress))
         setError('')
       } catch (error) {
         setError(String(error))
@@ -182,12 +223,12 @@ export default function CreatePage() {
       {error && (
         <Alert sx={{ mt: 3, mb: 2 }} severity="error">
           <Typography variant="h6"> Creation failed </Typography>
-          It seems the given data is not matching the type required
+          {error}
         </Alert>
       )}
       {cNftAddress && !error && (
         <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-          <Typography variant="h6"> Your cNFT has been minted! </Typography>
+          <Typography variant="h6"> Your data has been protected !</Typography>
           <Link
             href={`https://explorer.iex.ec/bellecour/dataset/${cNftAddress}`}
             target="_blank"
@@ -195,6 +236,7 @@ export default function CreatePage() {
           >
             You can reach it here
           </Link>
+          <p>{cNftAddress}</p>
         </Alert>
       )}
       {loading && (

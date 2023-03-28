@@ -7,7 +7,8 @@ import { EthereumClient, w3mProvider, w3mConnectors } from '@web3modal/ethereum'
 import { WagmiConfig, createClient, configureChains } from 'wagmi'
 import { Web3Modal } from '@web3modal/react'
 import { bellecour } from './utils/walletConnection'
-import { IExecPrivateDataProtector } from 'private-data-protector-testing-sdk'
+import { store } from './app/store'
+import { Provider } from "react-redux";
 
 const rootElement = document.getElementById('root')
 const root = createRoot(rootElement!)
@@ -39,22 +40,17 @@ const wagmiClient = createClient({
 // Configure modal ethereum client
 const ethereumClient = new EthereumClient(wagmiClient, chains)
 
-// Configure private data protector
-export const PrivateData = new IExecPrivateDataProtector(window.ethereum, {
-  iexecOptions: {
-    smsURL: 'https://v7.sms.prod-tee-services.bellecour.iex.ec',
-  },
-})
-
 root.render(
   <StrictMode>
     <ThemeProvider theme={theme}>
-      <BrowserRouter>
-        <WagmiConfig client={wagmiClient}>
-          <App />
-        </WagmiConfig>
-        <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
-      </BrowserRouter>
+      <Provider store={store}>
+        <BrowserRouter>
+          <WagmiConfig client={wagmiClient}>
+            <App />
+          </WagmiConfig>
+          <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
+        </BrowserRouter>
+      </Provider>
     </ThemeProvider>
   </StrictMode>,
 )

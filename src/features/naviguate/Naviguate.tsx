@@ -8,17 +8,15 @@ import {
   Toolbar,
   Typography,
 } from '@mui/material'
-import { useWeb3Modal } from '@web3modal/react'
 import { useEffect, useState } from 'react'
 import { Outlet, useNavigate } from 'react-router-dom'
-import { useAccount, useConnect, useDisconnect } from 'wagmi'
+import { useAccount, useDisconnect } from 'wagmi'
+import Connect from './Connect'
 
 export default function Naviguate() {
   const [value, setValue] = useState('one')
   const naviguate = useNavigate()
-  const { error } = useConnect()
-  const { address, isConnecting, isConnected, isDisconnected } = useAccount()
-  const { open } = useWeb3Modal()
+  const { address, isConnected, isDisconnected } = useAccount()
   const { disconnect } = useDisconnect()
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
@@ -62,7 +60,7 @@ export default function Naviguate() {
           </Toolbar>
         </AppBar>
       )}
-      <Box className="my-box" sx={{ mt: 20 }}>
+      <Box className="my-box">
         {isConnected && (
           <>
             <Tabs
@@ -71,8 +69,14 @@ export default function Naviguate() {
               aria-label="wrapped label tabs example"
               sx={{ mt: 10 }}
             >
-              <Tab value="one" label="Protect your data" />
-              <Tab value="two" label="Grant & Revoke Access" />
+              <Tab
+                value="one"
+                label="Protect your data"
+              />
+              <Tab
+                value="two"
+                label="Grant & Revoke Access"
+              />
             </Tabs>
             <Box className="my-box">
               <Box className="form-box">
@@ -82,20 +86,7 @@ export default function Naviguate() {
           </>
         )}
 
-        {isDisconnected && (
-          <Box sx={{ mt: 10 }}>
-            <Button variant="contained" onClick={() => open()}>
-              Connect
-            </Button>
-            {error && <Typography>{error.message}</Typography>}
-            {isConnecting && <Typography>Connecting…</Typography>}
-            {isDisconnected && (
-              <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
-                Connect your Wallet
-              </Typography>
-            )}
-          </Box>
-        )}
+        {isDisconnected && <Connect />}
       </Box>
     </Container>
   )
