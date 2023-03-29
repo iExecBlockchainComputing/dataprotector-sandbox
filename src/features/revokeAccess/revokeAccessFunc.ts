@@ -1,5 +1,5 @@
 import { getAccount } from '@wagmi/core';
-import { IExecPrivateDataProtector } from 'iexec-private-data-protector'
+import { IExecPrivateDataProtector } from 'private-data-protector-testing-sdk'
 
 const revokeAccessFunc = async (dataset: string, requesterrestrict: string) => {
   const result = getAccount()
