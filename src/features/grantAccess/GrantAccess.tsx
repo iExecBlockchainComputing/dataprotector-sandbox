@@ -56,7 +56,6 @@ export default function GrantAccess() {
 
   const handleSubmit = async () => {
     try {
-      const action = setUserAddressRestricted(userRestrictedAddress)
       dispatch(setUserAddressRestricted(userRestrictedAddress))
       setLoading(true)
       const accessHash = await grantAccessFunc(
@@ -65,14 +64,12 @@ export default function GrantAccess() {
         userRestrictedAddress,
       )
       setError('')
-      console.log('accessHash', accessHash)
       setGrantAccess(accessHash)
     } catch (error) {
       setError(String(error))
       setGrantAccess('')
     }
     setLoading(false)
-    console.log('grantAccess', grantAccess)
   }
 
   return (

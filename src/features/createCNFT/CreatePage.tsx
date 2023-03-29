@@ -228,7 +228,7 @@ export default function CreatePage() {
       )}
       {cNftAddress && !error && (
         <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-          <Typography variant="h6"> Your data has been protected !</Typography>
+          <Typography variant="h6"> Your data has been protected!</Typography>
           <Link
             href={`https://explorer.iex.ec/bellecour/dataset/${cNftAddress}`}
             target="_blank"
@@ -236,7 +236,7 @@ export default function CreatePage() {
           >
             You can reach it here
           </Link>
-          <p>{cNftAddress}</p>
+          <p>Your protected data address: {cNftAddress}</p>
         </Alert>
       )}
       {loading && (

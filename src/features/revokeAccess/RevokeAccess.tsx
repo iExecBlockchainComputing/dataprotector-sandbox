@@ -19,7 +19,7 @@ export default function RevokeAccess() {
   //global state
   const [error, setError] = useState('')
   const [loading, setLoading] = useState(false)
-  const [revokeAccess, setRevokeAccess] = useState([''])
+  const [revokeAccess, setRevokeAccess] = useState<string[]>()
   const grantAccessAddress = useAppSelector(selectProtectedDataCreated)
   const userAddress = useAppSelector(selectUserAddressRestricted)
 
@@ -36,14 +36,19 @@ export default function RevokeAccess() {
   const handleOrderAddressChange = (event: any) => {
     setDataProtectedAddress(event.target.value)
     setIsValidDataProtectedAddress(isAddress(event.target.value))
-    setIsValidDataProtectedAddress(true)
   }
   const handleSubmit = async () => {
-    const tx = await revokeAccessFunc(dataProtectedAddress, userAddress)
-    setRevokeAccess(tx)
-    setLoading(true)
+    try {
+      setLoading(true)
+      const tx = await revokeAccessFunc(dataProtectedAddress, userAddress)
+      setRevokeAccess(tx)
+    } catch (error) {
+      setError(String(error))
+      setRevokeAccess([''])
+    }
+    console.log(dataProtectedAddress)
+    setLoading(false)
   }
-
   return (
     <Box className="form-box">
       <TextField
@@ -75,15 +80,20 @@ export default function RevokeAccess() {
           sx={{ display: 'block', margin: '20px auto' }}
         ></CircularProgress>
       )}
-      {revokeAccess.length && !error && (
+      {revokeAccess && !error && (
         <>
           <Alert sx={{ mt: 3, mb: 2 }} severity="success">
             <Typography variant="h6">
               You have successfully revoke access!
             </Typography>
           </Alert>
-          <RevokeAccess />
         </>
+      )}
+      {error && (
+        <Alert sx={{ mt: 3, mb: 2 }} severity="error">
+          <Typography variant="h6"> Revoke Access failed </Typography>
+          {error}
+        </Alert>
       )}
     </Box>
   )
