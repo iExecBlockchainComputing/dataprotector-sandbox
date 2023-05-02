@@ -46,7 +46,6 @@ export default function RevokeAccess() {
       setError(String(error));
       setRevokeAccess("");
     }
-    console.log(protectedData);
     setLoading(false);
   };
   return (

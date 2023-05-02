@@ -33,6 +33,7 @@ import {
   setMemoAge,
   setMemoDataType,
 } from "../../app/dataProtectedSlice";
+import { DataSchema } from "@iexec/dataprotector";
 
 export default function CreatePage() {
   //global state
@@ -106,24 +107,26 @@ export default function CreatePage() {
     }
   }
 
-  const handleSubmit = async (event: any) => {
-    let data: string | ArrayBuffer;
+  const handleSubmit = async () => {
+    let data: DataSchema;
+    let bufferFile: ArrayBuffer;
     switch (dataType) {
       case "email":
-        data = email!;
+        data = { email: email };
         break;
       case "age":
-        data = age!;
+        data = { age: age };
         break;
       case "file":
-        data = await create_ArrayBuffer(file);
+        bufferFile = await create_ArrayBuffer(file);
+        data = { file: bufferFile };
         break;
     }
 
     if (dataType && name && ((isValidEmail && email) || age || file)) {
       try {
         setLoading(true);
-        const ProtectedDataAddress = await protectDataFunc(data!, name);
+        const ProtectedDataAddress = await protectDataFunc(data, name);
         setProtectedData(ProtectedDataAddress);
         dispatch(setLastProtectedDataCreated(ProtectedDataAddress));
         setError("");

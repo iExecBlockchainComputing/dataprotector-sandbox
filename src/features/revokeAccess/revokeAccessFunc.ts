@@ -11,7 +11,6 @@ const revokeAccessFunc = async (
 
   // Configure private data protector
   const dataProtector = new IExecDataProtector(provider);
-
   const grantedAccessArray = await dataProtector.fetchGrantedAccess({
     protectedData,
     authorizedUser,
