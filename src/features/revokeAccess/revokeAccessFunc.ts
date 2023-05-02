@@ -1,22 +1,25 @@
-import { getAccount } from '@wagmi/core';
-import { IExecPrivateDataProtector } from 'private-data-protector-testing-sdk'
+import { getAccount } from "@wagmi/core";
+import { IExecDataProtector } from "@iexec/dataprotector";
 
-const revokeAccessFunc = async (dataset: string, requesterrestrict: string) => {
-  const result = getAccount()
-  const provider = await result.connector?.getProvider()
+const revokeAccessFunc = async (
+  protectedData: string,
+  authorizedUser: string,
+  authorizedApp: string
+) => {
+  const result = getAccount();
+  const provider = await result.connector?.getProvider();
 
   // Configure private data protector
-  const PrivateData = new IExecPrivateDataProtector(provider, {
-    iexecOptions: {
-      smsURL: 'https://v7.sms.prod-tee-services.bellecour.iex.ec',
-    },
-  })
+  const dataProtector = new IExecDataProtector(provider);
 
-  const tx = await PrivateData.revokeConfidentialNFTUsage({
-    dataset,
-    requesterrestrict
-  })
-  return tx
-}
+  const grantedAccessArray = await dataProtector.fetchGrantedAccess({
+    protectedData,
+    authorizedUser,
+    authorizedApp,
+  });
+  const { txHash } = await dataProtector.revokeOneAccess(grantedAccessArray[0]);
+
+  return txHash;
+};
 
 export default revokeAccessFunc;

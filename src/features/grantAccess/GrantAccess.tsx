@@ -6,71 +6,69 @@ import {
   Link,
   TextField,
   Typography,
-} from '@mui/material'
-import { useState } from 'react'
-import RevokeAccess from '../revokeAccess/RevokeAccess'
-import grantAccessFunc from './grantAccessFunc'
-import { isAddress } from 'ethers/lib/utils.js'
-import { useAppSelector, useAppDispatch } from '../../app/hooks'
+} from "@mui/material";
+import { useState } from "react";
+import RevokeAccess from "../revokeAccess/RevokeAccess";
+import grantAccessFunc from "./grantAccessFunc";
+import { isAddress } from "ethers/lib/utils.js";
+import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   selectProtectedDataCreated,
   setUserAddressRestricted,
-} from '../../app/appSlice'
+} from "../../app/appSlice";
+import { NULL_ADDRESS } from "../../utils/constant";
 
 export default function GrantAccess() {
   //global state
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [grantAccess, setGrantAccess] = useState('')
-  const dispatch = useAppDispatch()
-  const protectedDataAddress = useAppSelector(selectProtectedDataCreated)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [grantAccess, setGrantAccess] = useState("");
+  const dispatch = useAppDispatch();
+  const protectedDataRegistered = useAppSelector(selectProtectedDataCreated);
 
-  //for dataset address
-  const [datasetAddress, setDatasetAddress] = useState(protectedDataAddress)
-  const [isValidDatasetAddress, setIsValidDatasetAddress] = useState(true)
+  //for protectedData address
+  const [protectedData, setProtectedData] = useState(protectedDataRegistered);
+  const [isValidProtectedData, setIsValidProtectedData] = useState(true);
 
   //for access number
-  const [accessNumber, setAccessNumber] = useState<number>(1)
+  const [accessNumber, setAccessNumber] = useState<number>(1);
 
   //for user restricted address
-  const [userRestrictedAddress, setUserRestrictedAddress] = useState('')
-  const [
-    isValidUserRestrictedAddress,
-    setIsValidUserRestrictedAddress,
-  ] = useState(true)
+  const [authorizedUser, setAuthorizedUser] = useState("");
+  const [isValidAuthorizedUser, setIsValidAuthorizedUser] = useState(true);
 
   //handle functions
-  const handleDatasetAddressChange = (event: any) => {
-    setDatasetAddress(event.target.value)
-    setIsValidDatasetAddress(isAddress(event.target.value))
-  }
+  const handleProtectedDataChange = (event: any) => {
+    setProtectedData(event.target.value);
+    setIsValidProtectedData(isAddress(event.target.value));
+  };
 
   const handleAccessNumberChange = (event: any) => {
-    setAccessNumber(event.target.value)
-  }
+    setAccessNumber(event.target.value);
+  };
 
-  const userRestrictedAddressChange = (event: any) => {
-    setUserRestrictedAddress(event.target.value)
-    setIsValidUserRestrictedAddress(isAddress(event.target.value))
-  }
+  const authorizedUserChange = (event: any) => {
+    setAuthorizedUser(event.target.value);
+    setIsValidAuthorizedUser(isAddress(event.target.value));
+  };
 
   const handleSubmit = async () => {
     try {
-      dispatch(setUserAddressRestricted(userRestrictedAddress))
-      setLoading(true)
+      dispatch(setUserAddressRestricted(authorizedUser));
+      setLoading(true);
       const accessHash = await grantAccessFunc(
-        datasetAddress,
-        accessNumber,
-        userRestrictedAddress,
-      )
-      setError('')
-      setGrantAccess(accessHash)
+        protectedData,
+        authorizedUser,
+        NULL_ADDRESS
+      );
+      setError("");
+      setGrantAccess(accessHash);
     } catch (error) {
-      setError(String(error))
-      setGrantAccess('')
+      setError(String(error));
+      setGrantAccess("");
     }
-    setLoading(false)
-  }
+    setLoading(false);
+  };
 
   return (
     <div>
@@ -81,12 +79,12 @@ export default function GrantAccess() {
         label="Data Address"
         variant="outlined"
         sx={{ mt: 3 }}
-        value={datasetAddress}
-        onChange={handleDatasetAddressChange}
+        value={protectedData}
+        onChange={handleProtectedDataChange}
         type="text"
-        error={!isValidDatasetAddress}
+        error={!isValidProtectedData}
         helperText={
-          !isValidDatasetAddress && 'Please enter a valid dataset address'
+          !isValidProtectedData && "Please enter a valid protectedData address"
         }
       />
       <TextField
@@ -102,21 +100,21 @@ export default function GrantAccess() {
       />
       <TextField
         fullWidth
-        id="userRestrictedAddress"
+        id="authorizedUser"
         label="User Address Restricted"
         variant="outlined"
         sx={{ mt: 3 }}
-        value={userRestrictedAddress}
-        onChange={userRestrictedAddressChange}
+        value={authorizedUser}
+        onChange={authorizedUserChange}
         type="text"
-        error={!isValidUserRestrictedAddress}
+        error={!isValidAuthorizedUser}
         helperText={
-          !isValidUserRestrictedAddress && 'Please enter a valid user address'
+          !isValidAuthorizedUser && "Please enter a valid user address"
         }
       />
       {!loading && (
         <Button
-          sx={{ display: 'block', margin: '20px auto' }}
+          sx={{ display: "block", margin: "20px auto" }}
           onClick={handleSubmit}
           variant="contained"
         >
@@ -139,9 +137,9 @@ export default function GrantAccess() {
       )}
       {loading && (
         <CircularProgress
-          sx={{ display: 'block', margin: '20px auto' }}
+          sx={{ display: "block", margin: "20px auto" }}
         ></CircularProgress>
       )}
     </div>
-  )
+  );
 }

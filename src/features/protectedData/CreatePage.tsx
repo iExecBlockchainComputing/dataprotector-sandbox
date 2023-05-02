@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState } from "react";
 import {
   TextField,
   Typography,
@@ -11,14 +11,14 @@ import {
   Link,
   FormControl,
   Grid,
-} from '@mui/material'
-import { Verified } from '@mui/icons-material'
-import createCNFT from './createCnftFunc'
-import { useAppDispatch, useAppSelector } from '../../app/hooks'
+} from "@mui/material";
+import { Verified } from "@mui/icons-material";
+import protectDataFunc from "./protectDataFunc";
+import { useAppDispatch, useAppSelector } from "../../app/hooks";
 import {
   selectProtectedDataCreated,
   setLastProtectedDataCreated,
-} from '../../app/appSlice'
+} from "../../app/appSlice";
 import {
   selectName,
   selectFilePath,
@@ -32,124 +32,124 @@ import {
   setMemoEmail,
   setMemoAge,
   setMemoDataType,
-} from '../../app/dataProtectedSlice'
+} from "../../app/dataProtectedSlice";
 
 export default function CreatePage() {
   //global state
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState('')
-  const dispatch = useAppDispatch()
-  const protectedDataAddress = useAppSelector(selectProtectedDataCreated)
-  const [cNftAddress, setCNftAddress] = useState(protectedDataAddress)
-  const memoName = useAppSelector(selectName)
-  const memoFilePath = useAppSelector(selectFilePath)
-  const memoFile = useAppSelector(selectFile)
-  const memoEmail = useAppSelector(selectEmail)
-  const memoAge = useAppSelector(selectAge)
-  const memoDataType = useAppSelector(selectDataType)
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const dispatch = useAppDispatch();
+  const protectedDataRegistered = useAppSelector(selectProtectedDataCreated);
+  const [protectedData, setProtectedData] = useState(protectedDataRegistered);
+  const memoName = useAppSelector(selectName);
+  const memoFilePath = useAppSelector(selectFilePath);
+  const memoFile = useAppSelector(selectFile);
+  const memoEmail = useAppSelector(selectEmail);
+  const memoAge = useAppSelector(selectAge);
+  const memoDataType = useAppSelector(selectDataType);
 
   //for name et dataType
-  const [name, setName] = useState(memoName)
-  const [dataType, setDataType] = useState(memoDataType)
+  const [name, setName] = useState(memoName);
+  const [dataType, setDataType] = useState(memoDataType);
 
   //for email
-  const [email, setEmail] = useState(memoEmail)
-  const [isValidEmail, setIsValidEmail] = useState(true)
+  const [email, setEmail] = useState(memoEmail);
+  const [isValidEmail, setIsValidEmail] = useState(true);
 
   //for age
-  const [age, setAge] = useState(memoAge)
+  const [age, setAge] = useState(memoAge);
 
   //for file
-  const [filePath, setFilePath] = useState(memoFilePath)
-  const [file, setFile] = useState<File | undefined>(memoFile)
+  const [filePath, setFilePath] = useState(memoFilePath);
+  const [file, setFile] = useState<File | undefined>(memoFile);
 
   //handle functions
   const handleDataTypeChange = (event: any) => {
-    setDataType(event.target.value)
-    dispatch(setMemoDataType(event.target.value))
-  }
+    setDataType(event.target.value);
+    dispatch(setMemoDataType(event.target.value));
+  };
   const handleEmailChange = (event: any) => {
-    setEmail(event.target.value)
-    setIsValidEmail(event.target.validity.valid)
-    dispatch(setMemoEmail(event.target.value))
-  }
+    setEmail(event.target.value);
+    setIsValidEmail(event.target.validity.valid);
+    dispatch(setMemoEmail(event.target.value));
+  };
   const handleAgeChange = (event: any) => {
-    setAge(event.target.value)
-    dispatch(setMemoAge(event.target.value))
-  }
+    setAge(event.target.value);
+    dispatch(setMemoAge(event.target.value));
+  };
   const handleFileChange = (event: any) => {
-    setFilePath(event.target.value)
-    setFile(event.target.files?.[0])
-    dispatch(setMemoFilePath(event.target.value))
-    dispatch(setMemoFile(event.target.files?.[0]))
-  }
+    setFilePath(event.target.value);
+    setFile(event.target.files?.[0]);
+    dispatch(setMemoFilePath(event.target.value));
+    dispatch(setMemoFile(event.target.files?.[0]));
+  };
   const handleNameChange = (event: any) => {
-    setName(event.target.value)
-    dispatch(setMemoName(event.target.value))
-  }
+    setName(event.target.value);
+    dispatch(setMemoName(event.target.value));
+  };
 
   async function create_ArrayBuffer(file?: File): Promise<ArrayBuffer> {
-    const fileReader = new FileReader()
+    const fileReader = new FileReader();
     if (file) {
       return new Promise((resolve, reject) => {
         fileReader.onerror = () => {
-          fileReader.abort()
-          reject(new DOMException('Error parsing input file.'))
-        }
+          fileReader.abort();
+          reject(new DOMException("Error parsing input file."));
+        };
         fileReader.onload = () => {
-          resolve(fileReader.result as ArrayBuffer)
-        }
-        fileReader.readAsArrayBuffer(file)
-      })
+          resolve(fileReader.result as ArrayBuffer);
+        };
+        fileReader.readAsArrayBuffer(file);
+      });
     } else {
-      return Promise.reject(new Error('No file selected'))
+      return Promise.reject(new Error("No file selected"));
     }
   }
 
   const handleSubmit = async (event: any) => {
-    let data: string | ArrayBuffer
+    let data: string | ArrayBuffer;
     switch (dataType) {
-      case 'email':
-        data = email!
-        break
-      case 'age':
-        data = age!
-        break
-      case 'file':
-        data = await create_ArrayBuffer(file)
-        break
+      case "email":
+        data = email!;
+        break;
+      case "age":
+        data = age!;
+        break;
+      case "file":
+        data = await create_ArrayBuffer(file);
+        break;
     }
 
     if (dataType && name && ((isValidEmail && email) || age || file)) {
       try {
-        setLoading(true)
-        const ProtectedDataAddress = await createCNFT(data!, name)
-        setCNftAddress(ProtectedDataAddress)
-        dispatch(setLastProtectedDataCreated(ProtectedDataAddress))
-        setError('')
+        setLoading(true);
+        const ProtectedDataAddress = await protectDataFunc(data!, name);
+        setProtectedData(ProtectedDataAddress);
+        dispatch(setLastProtectedDataCreated(ProtectedDataAddress));
+        setError("");
       } catch (error) {
-        setError(String(error))
-        setCNftAddress('')
+        setError(String(error));
+        setProtectedData("");
       }
-      setLoading(false)
+      setLoading(false);
     }
-  }
+  };
 
   const dataTypes = [
-    { value: 'email', label: 'Email' },
-    { value: 'age', label: 'Age' },
-    { value: 'file', label: 'File' },
-  ]
+    { value: "email", label: "Email" },
+    { value: "age", label: "Age" },
+    { value: "file", label: "File" },
+  ];
   return (
     <div>
-      <FormControl fullWidth sx={{ mt: '24px' }}>
+      <FormControl fullWidth sx={{ mt: "24px" }}>
         <InputLabel>Select your data type</InputLabel>
         <Select
           fullWidth
           value={dataType}
           onChange={handleDataTypeChange}
           label="Select your data type"
-          sx={{ textAlign: 'left' }}
+          sx={{ textAlign: "left" }}
         >
           {dataTypes.map((item) => (
             <MenuItem key={item.value} value={item.value}>
@@ -158,7 +158,7 @@ export default function CreatePage() {
           ))}
         </Select>
       </FormControl>
-      {dataType === 'email' && (
+      {dataType === "email" && (
         <TextField
           required
           fullWidth
@@ -170,10 +170,10 @@ export default function CreatePage() {
           onChange={handleEmailChange}
           type="email"
           error={!isValidEmail}
-          helperText={!isValidEmail && 'Please enter a valid email address'}
+          helperText={!isValidEmail && "Please enter a valid email address"}
         />
       )}
-      {dataType === 'age' && (
+      {dataType === "age" && (
         <TextField
           fullWidth
           type="number"
@@ -186,7 +186,7 @@ export default function CreatePage() {
           sx={{ mt: 3 }}
         />
       )}
-      {dataType === 'file' && (
+      {dataType === "file" && (
         <Button
           variant="contained"
           component="label"
@@ -195,14 +195,14 @@ export default function CreatePage() {
           onChange={handleFileChange}
           sx={{ mt: 3 }}
         >
-          {!filePath ? 'Upload' : 'Updated File'}
+          {!filePath ? "Upload" : "Updated File"}
           <input hidden multiple type="file" />
         </Button>
       )}
-      {filePath && dataType === 'file' && (
+      {filePath && dataType === "file" && (
         <Grid container columnSpacing={1} sx={{ mt: 1 }}>
           <Grid item>
-            <Typography>{filePath.split('\\').slice(-1)}</Typography>
+            <Typography>{filePath.split("\\").slice(-1)}</Typography>
           </Grid>
           <Grid item>
             <Verified color="success" />
@@ -226,27 +226,27 @@ export default function CreatePage() {
           {error}
         </Alert>
       )}
-      {cNftAddress && !error && (
+      {protectedData && !error && (
         <Alert sx={{ mt: 3, mb: 2 }} severity="success">
           <Typography variant="h6"> Your data has been protected!</Typography>
           <Link
-            href={`https://explorer.iex.ec/bellecour/dataset/${cNftAddress}`}
+            href={`https://explorer.iex.ec/bellecour/dataset/${protectedData}`}
             target="_blank"
-            sx={{ color: 'green', textDecorationColor: 'green' }}
+            sx={{ color: "green", textDecorationColor: "green" }}
           >
             You can reach it here
           </Link>
-          <p>Your protected data address: {cNftAddress}</p>
+          <p>Your protected data address: {protectedData}</p>
         </Alert>
       )}
       {loading && (
         <CircularProgress
-          sx={{ display: 'block', margin: '20px auto' }}
+          sx={{ display: "block", margin: "20px auto" }}
         ></CircularProgress>
       )}
       {dataType && !loading && (
         <Button
-          sx={{ display: 'block', margin: '20px auto' }}
+          sx={{ display: "block", margin: "20px auto" }}
           onClick={handleSubmit}
           variant="contained"
         >
@@ -254,5 +254,5 @@ export default function CreatePage() {
         </Button>
       )}
     </div>
-  )
+  );
 }

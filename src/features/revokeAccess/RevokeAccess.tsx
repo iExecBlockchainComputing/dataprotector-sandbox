@@ -5,50 +5,50 @@ import {
   CircularProgress,
   TextField,
   Typography,
-} from '@mui/material'
-import { useState } from 'react'
-import revokeAccessFunc from './revokeAccessFunc'
-import { isAddress } from 'ethers/lib/utils.js'
-import { useAppSelector } from '../../app/hooks'
+} from "@mui/material";
+import { useState } from "react";
+import revokeAccessFunc from "./revokeAccessFunc";
+import { isAddress } from "ethers/lib/utils.js";
+import { useAppSelector } from "../../app/hooks";
 import {
   selectProtectedDataCreated,
   selectUserAddressRestricted,
-} from '../../app/appSlice'
+} from "../../app/appSlice";
+import { NULL_ADDRESS } from "../../utils/constant";
 
 export default function RevokeAccess() {
   //global state
-  const [error, setError] = useState('')
-  const [loading, setLoading] = useState(false)
-  const [revokeAccess, setRevokeAccess] = useState<string[]>()
-  const grantAccessAddress = useAppSelector(selectProtectedDataCreated)
-  const userAddress = useAppSelector(selectUserAddressRestricted)
+  const [error, setError] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [revokeAccess, setRevokeAccess] = useState<string>();
+  const grantAccessAddress = useAppSelector(selectProtectedDataCreated);
+  const authorizedUser = useAppSelector(selectUserAddressRestricted);
 
   //for order state
-  const [dataProtectedAddress, setDataProtectedAddress] = useState(
-    grantAccessAddress,
-  )
-  const [
-    isValidDataProtectedAddress,
-    setIsValidDataProtectedAddress,
-  ] = useState(true)
+  const [protectedData, setProtectedData] = useState(grantAccessAddress);
+  const [isValidProtectedData, setIsValidProtectedData] = useState(true);
 
   //handle function
   const handleOrderAddressChange = (event: any) => {
-    setDataProtectedAddress(event.target.value)
-    setIsValidDataProtectedAddress(isAddress(event.target.value))
-  }
+    setProtectedData(event.target.value);
+    setIsValidProtectedData(isAddress(event.target.value));
+  };
   const handleSubmit = async () => {
     try {
-      setLoading(true)
-      const tx = await revokeAccessFunc(dataProtectedAddress, userAddress)
-      setRevokeAccess(tx)
+      setLoading(true);
+      const tx = await revokeAccessFunc(
+        protectedData,
+        authorizedUser,
+        NULL_ADDRESS
+      );
+      setRevokeAccess(tx);
     } catch (error) {
-      setError(String(error))
-      setRevokeAccess([''])
+      setError(String(error));
+      setRevokeAccess("");
     }
-    console.log(dataProtectedAddress)
-    setLoading(false)
-  }
+    console.log(protectedData);
+    setLoading(false);
+  };
   return (
     <Box className="form-box">
       <TextField
@@ -58,17 +58,17 @@ export default function RevokeAccess() {
         label="Data Address"
         variant="outlined"
         sx={{ mt: 3 }}
-        value={dataProtectedAddress}
+        value={protectedData}
         onChange={handleOrderAddressChange}
         type="text"
-        error={!isValidDataProtectedAddress}
+        error={!isValidProtectedData}
         helperText={
-          !isValidDataProtectedAddress && 'Please enter a valid dataset address'
+          !isValidProtectedData && "Please enter a valid protectedData address"
         }
       />
       {!loading && (
         <Button
-          sx={{ display: 'block', margin: '20px auto' }}
+          sx={{ display: "block", margin: "20px auto" }}
           onClick={handleSubmit}
           variant="contained"
         >
@@ -77,7 +77,7 @@ export default function RevokeAccess() {
       )}
       {loading && (
         <CircularProgress
-          sx={{ display: 'block', margin: '20px auto' }}
+          sx={{ display: "block", margin: "20px auto" }}
         ></CircularProgress>
       )}
       {revokeAccess && !error && (
@@ -96,5 +96,5 @@ export default function RevokeAccess() {
         </Alert>
       )}
     </Box>
-  )
+  );
 }
