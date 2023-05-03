@@ -1,5 +1,5 @@
-import { getAccount } from "@wagmi/core";
-import { IExecDataProtector } from "@iexec/dataprotector";
+import { getAccount } from '@wagmi/core';
+import { IExecDataProtector } from '@iexec/dataprotector';
 
 const revokeAccessFunc = async (
   protectedData: string,

@@ -1,5 +1,5 @@
-import { createSlice } from "@reduxjs/toolkit";
-import { RootState } from "./store";
+import { createSlice } from '@reduxjs/toolkit';
+import { RootState } from './store';
 
 export interface AppState {
   lastProtectedDataCreated: string;
@@ -7,12 +7,12 @@ export interface AppState {
 }
 
 const initialState: AppState = {
-  lastProtectedDataCreated: "",
-  authorizedUser: "",
+  lastProtectedDataCreated: '',
+  authorizedUser: '',
 };
 
 export const appSlice = createSlice({
-  name: "app",
+  name: 'app',
   initialState,
   reducers: {
     setLastProtectedDataCreated: (state, action) => {
