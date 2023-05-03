@@ -12,7 +12,7 @@ import { isAddress } from "ethers/lib/utils.js";
 import { useAppSelector } from "../../app/hooks";
 import {
   selectProtectedDataCreated,
-  selectUserAddressRestricted,
+  selectAuthorizedUser,
 } from "../../app/appSlice";
 import { NULL_ADDRESS } from "../../utils/constant";
 
@@ -21,11 +21,11 @@ export default function RevokeAccess() {
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const [revokeAccess, setRevokeAccess] = useState<string>();
-  const grantAccessAddress = useAppSelector(selectProtectedDataCreated);
-  const authorizedUser = useAppSelector(selectUserAddressRestricted);
+  const protectedDataRegistered = useAppSelector(selectProtectedDataCreated);
+  const authorizedUser = useAppSelector(selectAuthorizedUser);
 
   //for order state
-  const [protectedData, setProtectedData] = useState(grantAccessAddress);
+  const [protectedData, setProtectedData] = useState(protectedDataRegistered);
   const [isValidProtectedData, setIsValidProtectedData] = useState(true);
 
   //handle function

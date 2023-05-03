@@ -14,7 +14,7 @@ import { isAddress } from "ethers/lib/utils.js";
 import { useAppSelector, useAppDispatch } from "../../app/hooks";
 import {
   selectProtectedDataCreated,
-  setUserAddressRestricted,
+  setAuthorizedUser,
 } from "../../app/appSlice";
 import { NULL_ADDRESS } from "../../utils/constant";
 
@@ -54,7 +54,7 @@ export default function GrantAccess() {
 
   const handleSubmit = async () => {
     try {
-      dispatch(setUserAddressRestricted(authorizedUser));
+      dispatch(setAuthorizedUser(authorizedUser));
       setLoading(true);
       const accessHash = await grantAccessFunc(
         protectedData,

@@ -17,7 +17,7 @@ const grantAccessFunc = async (
     protectedData,
     authorizedUser,
     authorizedApp,
-    pricePerAccess
+    pricePerAccess,
   });
   return accessHash;
 };

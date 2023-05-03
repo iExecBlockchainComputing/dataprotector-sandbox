@@ -12,7 +12,6 @@ const protectDataFunc = async (data: DataSchema, name: string) => {
     data,
     name,
   });
-  console.log(address);
   return address;
 };
 

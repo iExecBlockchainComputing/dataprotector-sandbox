@@ -7,33 +7,33 @@ import {
   Tabs,
   Toolbar,
   Typography,
-} from '@mui/material'
-import { useEffect, useState } from 'react'
-import { Outlet, useNavigate } from 'react-router-dom'
-import { useAccount, useDisconnect } from 'wagmi'
-import Connect from './Connect'
+} from "@mui/material";
+import { useEffect, useState } from "react";
+import { Outlet, useNavigate } from "react-router-dom";
+import { useAccount, useDisconnect } from "wagmi";
+import Connect from "./Connect";
 
 export default function Naviguate() {
-  const [value, setValue] = useState('one')
-  const naviguate = useNavigate()
-  const { address, isConnected, isDisconnected } = useAccount()
-  const { disconnect } = useDisconnect()
+  const [value, setValue] = useState("one");
+  const naviguate = useNavigate();
+  const { address, isConnected, isDisconnected } = useAccount();
+  const { disconnect } = useDisconnect();
 
   const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-    setValue(newValue)
-  }
+    setValue(newValue);
+  };
 
   useEffect(() => {
-    if (value === 'one') {
-      naviguate('/createCNFT')
-    } else if (value === 'two') {
-      naviguate('/grantAccess')
+    if (value === "one") {
+      naviguate("/createCNFT");
+    } else if (value === "two") {
+      naviguate("/grantAccess");
     }
-  }, [value])
+  }, [value]);
 
   const shortAddress = (address: string) => {
-    return address.slice(0, 6) + '...' + address.slice(-4)
-  }
+    return address.slice(0, 6) + "..." + address.slice(-4);
+  };
 
   return (
     <Container disableGutters>
@@ -41,15 +41,15 @@ export default function Naviguate() {
         <AppBar
           position="static"
           elevation={0}
-          sx={{ backgroundColor: 'transparent', width: '100%' }}
+          sx={{ backgroundColor: "transparent", width: "100%" }}
         >
-          <Toolbar sx={{ justifyContent: 'space-between' }}>
+          <Toolbar sx={{ justifyContent: "space-between" }}>
             <Typography
               sx={{
                 flexGrow: 1,
-                textAlign: 'right',
+                textAlign: "right",
                 mr: 2,
-                fontStyle: 'italic',
+                fontStyle: "italic",
               }}
             >
               {shortAddress(address as string)}
@@ -69,14 +69,8 @@ export default function Naviguate() {
               aria-label="wrapped label tabs example"
               sx={{ mt: 10 }}
             >
-              <Tab
-                value="one"
-                label="Protect your data"
-              />
-              <Tab
-                value="two"
-                label="Grant & Revoke Access"
-              />
+              <Tab value="one" label="Protect your data" />
+              <Tab value="two" label="Grant & Revoke Access" />
             </Tabs>
             <Box className="my-box">
               <Box className="form-box">
@@ -89,5 +83,5 @@ export default function Naviguate() {
         {isDisconnected && <Connect />}
       </Box>
     </Container>
-  )
+  );
 }
