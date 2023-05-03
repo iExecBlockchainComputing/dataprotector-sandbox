@@ -59,7 +59,8 @@ export default function GrantAccess() {
       const accessHash = await grantAccessFunc(
         protectedData,
         authorizedUser,
-        NULL_ADDRESS
+        NULL_ADDRESS,
+        accessNumber
       );
       setError("");
       setGrantAccess(accessHash);

@@ -4,7 +4,8 @@ import { IExecDataProtector } from "@iexec/dataprotector";
 const grantAccessFunc = async (
   protectedData: string,
   authorizedUser: string,
-  authorizedApp: string
+  authorizedApp: string,
+  pricePerAccess: number
 ) => {
   const result = getAccount();
   const provider = await result.connector?.getProvider();
@@ -16,6 +17,7 @@ const grantAccessFunc = async (
     protectedData,
     authorizedUser,
     authorizedApp,
+    pricePerAccess
   });
   return accessHash;
 };
