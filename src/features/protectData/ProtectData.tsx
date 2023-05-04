@@ -127,7 +127,6 @@ export default function ProtectData() {
       try {
         setLoading(true);
         const ProtectedDataAddress = await protectDataFunc(data, name);
-        console.log(ProtectedDataAddress);
         setProtectedData(ProtectedDataAddress);
         dispatch(setLastProtectedDataCreated(ProtectedDataAddress));
         setError('');
