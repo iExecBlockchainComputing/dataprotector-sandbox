@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState } from 'react';
 import {
   TextField,
   Typography,
@@ -11,14 +11,14 @@ import {
   Link,
   FormControl,
   Grid,
-} from "@mui/material";
-import { Verified } from "@mui/icons-material";
-import protectDataFunc from "./protectDataFunc";
-import { useAppDispatch, useAppSelector } from "../../app/hooks";
+} from '@mui/material';
+import { Verified } from '@mui/icons-material';
+import protectDataFunc from './protectDataFunc';
+import { useAppDispatch, useAppSelector } from '../../app/hooks';
 import {
   selectProtectedDataCreated,
   setLastProtectedDataCreated,
-} from "../../app/appSlice";
+} from '../../app/appSlice';
 import {
   selectName,
   selectFilePath,
@@ -32,13 +32,13 @@ import {
   setMemoEmail,
   setMemoAge,
   setMemoDataType,
-} from "../../app/dataProtectedSlice";
-import { DataSchema } from "@iexec/dataprotector";
+} from '../../app/dataProtectedSlice';
+import { DataSchema } from '@iexec/dataprotector';
 
-export default function CreatePage() {
+export default function ProtectData() {
   //global state
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const dispatch = useAppDispatch();
   const protectedDataRegistered = useAppSelector(selectProtectedDataCreated);
   const [protectedData, setProtectedData] = useState(protectedDataRegistered);
@@ -95,7 +95,7 @@ export default function CreatePage() {
       return new Promise((resolve, reject) => {
         fileReader.onerror = () => {
           fileReader.abort();
-          reject(new DOMException("Error parsing input file."));
+          reject(new DOMException('Error parsing input file.'));
         };
         fileReader.onload = () => {
           resolve(fileReader.result as ArrayBuffer);
@@ -103,7 +103,7 @@ export default function CreatePage() {
         fileReader.readAsArrayBuffer(file);
       });
     } else {
-      return Promise.reject(new Error("No file selected"));
+      return Promise.reject(new Error('No file selected'));
     }
   }
 
@@ -111,13 +111,13 @@ export default function CreatePage() {
     let data: DataSchema;
     let bufferFile: ArrayBuffer;
     switch (dataType) {
-      case "email":
+      case 'email':
         data = { email: email };
         break;
-      case "age":
+      case 'age':
         data = { age: age };
         break;
-      case "file":
+      case 'file':
         bufferFile = await create_ArrayBuffer(file);
         data = { file: bufferFile };
         break;
@@ -127,32 +127,33 @@ export default function CreatePage() {
       try {
         setLoading(true);
         const ProtectedDataAddress = await protectDataFunc(data, name);
+        console.log(ProtectedDataAddress);
         setProtectedData(ProtectedDataAddress);
         dispatch(setLastProtectedDataCreated(ProtectedDataAddress));
-        setError("");
+        setError('');
       } catch (error) {
         setError(String(error));
-        setProtectedData("");
+        setProtectedData('');
       }
       setLoading(false);
     }
   };
 
   const dataTypes = [
-    { value: "email", label: "Email" },
-    { value: "age", label: "Age" },
-    { value: "file", label: "File" },
+    { value: 'email', label: 'Email' },
+    { value: 'age', label: 'Age' },
+    { value: 'file', label: 'File' },
   ];
   return (
     <div>
-      <FormControl fullWidth sx={{ mt: "24px" }}>
+      <FormControl fullWidth sx={{ mt: '24px' }}>
         <InputLabel>Select your data type</InputLabel>
         <Select
           fullWidth
           value={dataType}
           onChange={handleDataTypeChange}
           label="Select your data type"
-          sx={{ textAlign: "left" }}
+          sx={{ textAlign: 'left' }}
         >
           {dataTypes.map((item) => (
             <MenuItem key={item.value} value={item.value}>
@@ -161,7 +162,7 @@ export default function CreatePage() {
           ))}
         </Select>
       </FormControl>
-      {dataType === "email" && (
+      {dataType === 'email' && (
         <TextField
           required
           fullWidth
@@ -173,10 +174,10 @@ export default function CreatePage() {
           onChange={handleEmailChange}
           type="email"
           error={!isValidEmail}
-          helperText={!isValidEmail && "Please enter a valid email address"}
+          helperText={!isValidEmail && 'Please enter a valid email address'}
         />
       )}
-      {dataType === "age" && (
+      {dataType === 'age' && (
         <TextField
           fullWidth
           type="number"
@@ -189,7 +190,7 @@ export default function CreatePage() {
           sx={{ mt: 3 }}
         />
       )}
-      {dataType === "file" && (
+      {dataType === 'file' && (
         <Button
           variant="contained"
           component="label"
@@ -198,14 +199,14 @@ export default function CreatePage() {
           onChange={handleFileChange}
           sx={{ mt: 3 }}
         >
-          {!filePath ? "Upload" : "Updated File"}
+          {!filePath ? 'Upload' : 'Updated File'}
           <input hidden multiple type="file" />
         </Button>
       )}
-      {filePath && dataType === "file" && (
+      {filePath && dataType === 'file' && (
         <Grid container columnSpacing={1} sx={{ mt: 1 }}>
           <Grid item>
-            <Typography>{filePath.split("\\").slice(-1)}</Typography>
+            <Typography>{filePath.split('\\').slice(-1)}</Typography>
           </Grid>
           <Grid item>
             <Verified color="success" />
@@ -235,7 +236,7 @@ export default function CreatePage() {
           <Link
             href={`https://explorer.iex.ec/bellecour/dataset/${protectedData}`}
             target="_blank"
-            sx={{ color: "green", textDecorationColor: "green" }}
+            sx={{ color: 'green', textDecorationColor: 'green' }}
           >
             You can reach it here
           </Link>
@@ -244,12 +245,12 @@ export default function CreatePage() {
       )}
       {loading && (
         <CircularProgress
-          sx={{ display: "block", margin: "20px auto" }}
+          sx={{ display: 'block', margin: '20px auto' }}
         ></CircularProgress>
       )}
       {dataType && !loading && (
         <Button
-          sx={{ display: "block", margin: "20px auto" }}
+          sx={{ display: 'block', margin: '20px auto' }}
           onClick={handleSubmit}
           variant="contained"
         >

@@ -6,23 +6,23 @@ import {
   Link,
   TextField,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import RevokeAccess from "../revokeAccess/RevokeAccess";
-import grantAccessFunc from "./grantAccessFunc";
-import { isAddress } from "ethers/lib/utils.js";
-import { useAppSelector, useAppDispatch } from "../../app/hooks";
+} from '@mui/material';
+import { useState } from 'react';
+import RevokeAccess from '../revokeAccess/RevokeAccess';
+import grantAccessFunc from './grantAccessFunc';
+import { isAddress } from 'ethers/lib/utils.js';
+import { useAppSelector, useAppDispatch } from '../../app/hooks';
 import {
   selectProtectedDataCreated,
   setAuthorizedUser,
-} from "../../app/appSlice";
-import { NULL_ADDRESS } from "../../utils/constant";
+} from '../../app/appSlice';
+import { NULL_ADDRESS } from '../../utils/constant';
 
 export default function GrantAccess() {
   //global state
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
-  const [grantAccess, setGrantAccess] = useState("");
+  const [grantAccess, setGrantAccess] = useState('');
   const dispatch = useAppDispatch();
   const protectedDataRegistered = useAppSelector(selectProtectedDataCreated);
 
@@ -34,7 +34,7 @@ export default function GrantAccess() {
   const [accessNumber, setAccessNumber] = useState<number>(1);
 
   //for user restricted address
-  const [authorizedUser, setAuthorizedUser] = useState("");
+  const [authorizedUser, setAuthorizedUserTemp] = useState('');
   const [isValidAuthorizedUser, setIsValidAuthorizedUser] = useState(true);
 
   //handle functions
@@ -48,7 +48,7 @@ export default function GrantAccess() {
   };
 
   const authorizedUserChange = (event: any) => {
-    setAuthorizedUser(event.target.value);
+    setAuthorizedUserTemp(event.target.value);
     setIsValidAuthorizedUser(isAddress(event.target.value));
   };
 
@@ -62,11 +62,11 @@ export default function GrantAccess() {
         NULL_ADDRESS,
         accessNumber
       );
-      setError("");
+      setError('');
       setGrantAccess(accessHash);
     } catch (error) {
       setError(String(error));
-      setGrantAccess("");
+      setGrantAccess('');
     }
     setLoading(false);
   };
@@ -85,7 +85,7 @@ export default function GrantAccess() {
         type="text"
         error={!isValidProtectedData}
         helperText={
-          !isValidProtectedData && "Please enter a valid protectedData address"
+          !isValidProtectedData && 'Please enter a valid protectedData address'
         }
       />
       <TextField
@@ -110,12 +110,12 @@ export default function GrantAccess() {
         type="text"
         error={!isValidAuthorizedUser}
         helperText={
-          !isValidAuthorizedUser && "Please enter a valid user address"
+          !isValidAuthorizedUser && 'Please enter a valid user address'
         }
       />
       {!loading && (
         <Button
-          sx={{ display: "block", margin: "20px auto" }}
+          sx={{ display: 'block', margin: '20px auto' }}
           onClick={handleSubmit}
           variant="contained"
         >
@@ -138,7 +138,7 @@ export default function GrantAccess() {
       )}
       {loading && (
         <CircularProgress
-          sx={{ display: "block", margin: "20px auto" }}
+          sx={{ display: 'block', margin: '20px auto' }}
         ></CircularProgress>
       )}
     </div>

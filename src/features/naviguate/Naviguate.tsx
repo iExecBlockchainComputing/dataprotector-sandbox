@@ -25,7 +25,7 @@ export default function Naviguate() {
 
   useEffect(() => {
     if (value === "one") {
-      naviguate("/createCNFT");
+      naviguate("/protectData");
     } else if (value === "two") {
       naviguate("/grantAccess");
     }

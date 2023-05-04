@@ -13,7 +13,7 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@iexec/dataprotector": "^0.0.0-nightly-16719e869bd0204618d779e3091d07ac635e4009",
+    "@iexec/dataprotector": "^0.0.0-nightly-1452568d18d428c65627ac450e6655394f5c7997",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "latest",
     "@reduxjs/toolkit": "^1.9.3",
