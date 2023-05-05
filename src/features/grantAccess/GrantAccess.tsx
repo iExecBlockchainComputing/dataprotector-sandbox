@@ -132,11 +132,7 @@ export default function GrantAccess() {
           <RevokeAccess />
         </>
       )}
-      {loading && (
-        <CircularProgress
-          sx={{ display: 'block', margin: '20px auto' }}
-        ></CircularProgress>
-      )}
+      {loading && <CircularProgress id="spacingStyle"></CircularProgress>}
     </div>
   );
 }
