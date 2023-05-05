@@ -16,7 +16,7 @@ import {
   selectProtectedDataCreated,
   setAuthorizedUser,
 } from '../../app/appSlice';
-import { NULL_ADDRESS } from '../../utils/constant';
+import { ethers } from 'ethers';
 
 export default function GrantAccess() {
   //global state
@@ -59,7 +59,7 @@ export default function GrantAccess() {
       const accessHash = await grantAccessFunc(
         protectedData,
         authorizedUser,
-        NULL_ADDRESS,
+        ethers.constants.AddressZero,
         accessNumber
       );
       setError('');

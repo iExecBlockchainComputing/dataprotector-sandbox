@@ -14,7 +14,7 @@ import {
   selectProtectedDataCreated,
   selectAuthorizedUser,
 } from '../../app/appSlice';
-import { NULL_ADDRESS } from '../../utils/constant';
+import { ethers } from 'ethers';
 
 export default function RevokeAccess() {
   //global state
@@ -39,7 +39,7 @@ export default function RevokeAccess() {
       const tx = await revokeAccessFunc(
         protectedData,
         authorizedUser,
-        NULL_ADDRESS
+        ethers.constants.AddressZero
       );
       setRevokeAccess(tx);
     } catch (error) {
