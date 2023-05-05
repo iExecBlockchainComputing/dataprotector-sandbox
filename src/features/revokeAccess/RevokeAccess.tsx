@@ -5,20 +5,20 @@ import {
   CircularProgress,
   TextField,
   Typography,
-} from "@mui/material";
-import { useState } from "react";
-import revokeAccessFunc from "./revokeAccessFunc";
-import { isAddress } from "ethers/lib/utils.js";
-import { useAppSelector } from "../../app/hooks";
+} from '@mui/material';
+import { useState } from 'react';
+import revokeAccessFunc from './revokeAccessFunc';
+import { isAddress } from 'ethers/lib/utils.js';
+import { useAppSelector } from '../../app/hooks';
 import {
   selectProtectedDataCreated,
   selectAuthorizedUser,
-} from "../../app/appSlice";
-import { NULL_ADDRESS } from "../../utils/constant";
+} from '../../app/appSlice';
+import { utils } from 'iexec';
 
 export default function RevokeAccess() {
   //global state
-  const [error, setError] = useState("");
+  const [error, setError] = useState('');
   const [loading, setLoading] = useState(false);
   const [revokeAccess, setRevokeAccess] = useState<string>();
   const protectedDataRegistered = useAppSelector(selectProtectedDataCreated);
@@ -39,12 +39,12 @@ export default function RevokeAccess() {
       const tx = await revokeAccessFunc(
         protectedData,
         authorizedUser,
-        NULL_ADDRESS
+        utils.NULL_ADDRESS
       );
       setRevokeAccess(tx);
     } catch (error) {
       setError(String(error));
-      setRevokeAccess("");
+      setRevokeAccess('');
     }
     setLoading(false);
   };
@@ -62,12 +62,12 @@ export default function RevokeAccess() {
         type="text"
         error={!isValidProtectedData}
         helperText={
-          !isValidProtectedData && "Please enter a valid protectedData address"
+          !isValidProtectedData && 'Please enter a valid protectedData address'
         }
       />
       {!loading && (
         <Button
-          sx={{ display: "block", margin: "20px auto" }}
+          sx={{ display: 'block', margin: '20px auto' }}
           onClick={handleSubmit}
           variant="contained"
         >
@@ -76,7 +76,7 @@ export default function RevokeAccess() {
       )}
       {loading && (
         <CircularProgress
-          sx={{ display: "block", margin: "20px auto" }}
+          sx={{ display: 'block', margin: '20px auto' }}
         ></CircularProgress>
       )}
       {revokeAccess && !error && (
