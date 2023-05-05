@@ -3,14 +3,19 @@
   text-align: center;
 }
 
-.my-box {
-  margin-top: 199px;
+#my-box {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.form-box {
-  margin-top: 100px;
-  min-width: 500px;
+#form-box {
+  width: 500px;
+  align-items: center;
 }
+
+#spacingStyle {
+  display: block;
+  margin: 20px auto;
+}
+
