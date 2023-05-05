@@ -1,6 +1,5 @@
 {
-  "name": "vite-project",
-  "private": true,
+  "name": "dataprotector-sandbox",
   "version": "0.0.0",
   "type": "module",
   "scripts": {
