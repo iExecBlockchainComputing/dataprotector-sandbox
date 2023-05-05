@@ -114,11 +114,7 @@ export default function GrantAccess() {
         }
       />
       {!loading && (
-        <Button
-          sx={{ display: 'block', margin: '20px auto' }}
-          onClick={handleSubmit}
-          variant="contained"
-        >
+        <Button id="spacingStyle" onClick={handleSubmit} variant="contained">
           Grant Access
         </Button>
       )}

@@ -14,7 +14,7 @@ import {
   selectProtectedDataCreated,
   selectAuthorizedUser,
 } from '../../app/appSlice';
-import { utils } from 'iexec';
+import { NULL_ADDRESS } from '../../utils/constant';
 
 export default function RevokeAccess() {
   //global state
@@ -39,7 +39,7 @@ export default function RevokeAccess() {
       const tx = await revokeAccessFunc(
         protectedData,
         authorizedUser,
-        utils.NULL_ADDRESS
+        NULL_ADDRESS
       );
       setRevokeAccess(tx);
     } catch (error) {
@@ -66,19 +66,11 @@ export default function RevokeAccess() {
         }
       />
       {!loading && (
-        <Button
-          sx={{ display: 'block', margin: '20px auto' }}
-          onClick={handleSubmit}
-          variant="contained"
-        >
+        <Button id="spacingStyle" onClick={handleSubmit} variant="contained">
           Revoke Access
         </Button>
       )}
-      {loading && (
-        <CircularProgress
-          sx={{ display: 'block', margin: '20px auto' }}
-        ></CircularProgress>
-      )}
+      {loading && <CircularProgress id="spacingStyle"></CircularProgress>}
       {revokeAccess && !error && (
         <>
           <Alert sx={{ mt: 3, mb: 2 }} severity="success">

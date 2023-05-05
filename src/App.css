@@ -13,3 +13,8 @@
   width: 500px;
   align-items: center;
 }
+
+#spacingStyle {
+  display: block;
+  margin: 20px auto;
+}
