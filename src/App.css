@@ -3,13 +3,13 @@
   text-align: center;
 }
 
-.my-box {
+#my-box {
   display: flex;
   flex-direction: column;
   align-items: center;
 }
 
-.form-box {
+#form-box {
   width: 500px;
   align-items: center;
 }
@@ -18,3 +18,4 @@
   display: block;
   margin: 20px auto;
 }
+

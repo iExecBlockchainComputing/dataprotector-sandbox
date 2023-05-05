@@ -7,15 +7,15 @@ import {
   Tabs,
   Toolbar,
   Typography,
-} from "@mui/material";
-import { useEffect, useState } from "react";
-import { Outlet, useNavigate } from "react-router-dom";
-import { useAccount, useDisconnect } from "wagmi";
-import Connect from "./Connect";
+} from '@mui/material';
+import { useEffect, useState } from 'react';
+import { Outlet, useNavigate } from 'react-router-dom';
+import { useAccount, useDisconnect } from 'wagmi';
+import Connect from './Connect';
 
-export default function Naviguate() {
-  const [value, setValue] = useState("one");
-  const naviguate = useNavigate();
+export default function Navigate() {
+  const [value, setValue] = useState('one');
+  const navigate = useNavigate();
   const { address, isConnected, isDisconnected } = useAccount();
   const { disconnect } = useDisconnect();
 
@@ -24,15 +24,15 @@ export default function Naviguate() {
   };
 
   useEffect(() => {
-    if (value === "one") {
-      naviguate("/protectData");
-    } else if (value === "two") {
-      naviguate("/grantAccess");
+    if (value === 'one') {
+      navigate('/protectData');
+    } else if (value === 'two') {
+      navigate('/grantAccess');
     }
   }, [value]);
 
   const shortAddress = (address: string) => {
-    return address.slice(0, 6) + "..." + address.slice(-4);
+    return address.slice(0, 6) + '...' + address.slice(-4);
   };
 
   return (
@@ -41,15 +41,15 @@ export default function Naviguate() {
         <AppBar
           position="static"
           elevation={0}
-          sx={{ backgroundColor: "transparent", width: "100%" }}
+          sx={{ backgroundColor: 'transparent', width: '100%' }}
         >
-          <Toolbar sx={{ justifyContent: "space-between" }}>
+          <Toolbar sx={{ justifyContent: 'space-between' }}>
             <Typography
               sx={{
                 flexGrow: 1,
-                textAlign: "right",
+                textAlign: 'right',
                 mr: 2,
-                fontStyle: "italic",
+                fontStyle: 'italic',
               }}
             >
               {shortAddress(address as string)}
@@ -60,7 +60,7 @@ export default function Naviguate() {
           </Toolbar>
         </AppBar>
       )}
-      <Box className="my-box">
+      <Box id="my-box">
         {isConnected && (
           <>
             <Tabs
@@ -72,8 +72,8 @@ export default function Naviguate() {
               <Tab value="one" label="Protect your data" />
               <Tab value="two" label="Grant & Revoke Access" />
             </Tabs>
-            <Box className="my-box">
-              <Box className="form-box">
+            <Box id="my-box">
+              <Box id="form-box">
                 <Outlet />
               </Box>
             </Box>

@@ -49,7 +49,7 @@ export default function RevokeAccess() {
     setLoading(false);
   };
   return (
-    <Box className="form-box">
+    <Box id="form-box">
       <TextField
         required
         fullWidth

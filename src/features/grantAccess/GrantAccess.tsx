@@ -76,7 +76,6 @@ export default function GrantAccess() {
       <TextField
         required
         fullWidth
-        id="dataAddress"
         label="Data Address"
         variant="outlined"
         sx={{ mt: 3 }}
