@@ -12,10 +12,10 @@
 #form-box {
   width: 500px;
   align-items: center;
+  margin: auto;
 }
 
 #spacingStyle {
   display: block;
   margin: 20px auto;
 }
-
