@@ -1,7 +1,6 @@
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 import { BrowserRouter } from 'react-router-dom';
-import App from './App';
 import { ThemeProvider, createTheme } from '@mui/material';
 import {
   EthereumClient,
@@ -11,6 +10,8 @@ import {
 import { WagmiConfig, createClient, configureChains } from 'wagmi';
 import { Web3Modal } from '@web3modal/react';
 import { bellecour } from './utils/walletConnection';
+import './main.css';
+import Front from './features/Front';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement!);
@@ -49,7 +50,7 @@ root.render(
     <ThemeProvider theme={theme}>
       <BrowserRouter>
         <WagmiConfig client={wagmiClient}>
-          <App />
+          <Front />
         </WagmiConfig>
         <Web3Modal projectId={projectId} ethereumClient={ethereumClient} />
       </BrowserRouter>
