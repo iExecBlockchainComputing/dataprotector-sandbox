@@ -20,6 +20,7 @@ import { isAddress } from 'ethers/lib/utils.js';
 import { ethers } from 'ethers';
 import Connect from './Connect';
 import { useAccount, useDisconnect } from 'wagmi';
+import { IEXEC_EXPLORER_URL } from '../utils/config';
 
 export default function Front() {
   //connection with wallet
@@ -143,6 +144,7 @@ export default function Front() {
     <Container disableGutters>
       {isConnected ? (
         <>
+          {/**App bar for wallet connection*/}
           <AppBar
             position="static"
             elevation={0}
@@ -164,7 +166,7 @@ export default function Front() {
               </Button>
             </Toolbar>
           </AppBar>
-
+          {/**First Box to create a Protected Data*/}
           <Box id="form-box">
             <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
               Protect your data
@@ -212,7 +214,7 @@ export default function Front() {
                   Your data has been protected!
                 </Typography>
                 <Link
-                  href={`https://explorer.iex.ec/bellecour/dataset/${protectedData}`}
+                  href={IEXEC_EXPLORER_URL + protectedData}
                   target="_blank"
                   sx={{ color: 'green', textDecorationColor: 'green' }}
                 >
@@ -227,7 +229,7 @@ export default function Front() {
               ></CircularProgress>
             )}
           </Box>
-
+          {/**Second Box to grant access to a Protected Data */}
           {protectedData && (
             <Box id="form-box">
               <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
@@ -302,7 +304,7 @@ export default function Front() {
               )}
             </Box>
           )}
-
+          {/**Third Box to revoke the access given to a Protected Data*/}
           {grantAccess && (
             <Box id="form-box">
               <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
