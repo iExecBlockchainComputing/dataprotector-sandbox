@@ -210,7 +210,6 @@ export default function Front() {
             {protectedData && !errorProtect && (
               <Alert sx={{ mt: 3, mb: 2 }} severity="success">
                 <Typography variant="h6">
-                  {' '}
                   Your data has been protected!
                 </Typography>
                 <Link
@@ -233,7 +232,7 @@ export default function Front() {
           {protectedData && (
             <Box id="form-box">
               <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-                Grant Access For Your data
+                Grant Access for your protected data
               </Typography>
               <TextField
                 required
