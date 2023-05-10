@@ -86,7 +86,6 @@ export default function Front() {
       try {
         setLoadingProtect(true);
         const ProtectedDataAddress = await protectDataFunc(data, name);
-        console.log('ProtectedDataAddress', ProtectedDataAddress);
         setProtectedData(ProtectedDataAddress);
         setErrorProtect('');
       } catch (error) {
