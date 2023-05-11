@@ -342,7 +342,7 @@ export default function Front() {
                 <>
                   <Alert sx={{ mt: 3, mb: 2 }} severity="success">
                     <Typography variant="h6">
-                      You have successfully revoke access!
+                      You have successfully revoked access!
                     </Typography>
                   </Alert>
                 </>
