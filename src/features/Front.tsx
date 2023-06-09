@@ -17,12 +17,14 @@ import {
   revokeAccessFunc,
 } from './protectDataFunc';
 import { isAddress } from 'ethers/lib/utils.js';
-import { ethers } from 'ethers';
 import Connect from './Connect';
 import { useAccount, useDisconnect } from 'wagmi';
 import { IEXEC_EXPLORER_URL } from '../utils/config';
+import { DataSchema, GrantedAccess } from '@iexec/dataprotector';
 
 export default function Front() {
+  //web3mail dapp END
+  const WEB3MAIL_APP_ENS = 'web3mail.apps.iexec.eth';
   //connection with wallet
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
@@ -38,7 +40,7 @@ export default function Front() {
   //global state
   const [protectedData, setProtectedData] = useState('');
   const [isValidProtectedData, setIsValidProtectedData] = useState(true);
-  const [grantAccess, setGrantAccess] = useState('');
+  const [grantAccess, setGrantAccess] = useState<GrantedAccess>();
   const [revokeAccess, setRevokeAccess] = useState('');
 
   //set name
@@ -83,7 +85,7 @@ export default function Front() {
   const protectedDataSubmit = async () => {
     setErrorProtect('');
     if (email) {
-      const data = { email: email };
+      const data: DataSchema = { email: email } as DataSchema;
       try {
         setLoadingProtect(true);
         const ProtectedDataAddress = await protectDataFunc(data, name);
@@ -106,14 +108,14 @@ export default function Front() {
       const accessHash = await grantAccessFunc(
         protectedData,
         authorizedUser,
-        ethers.constants.AddressZero,
+        WEB3MAIL_APP_ENS,
         accessNumber
       );
       setErrorGrant('');
       setGrantAccess(accessHash);
     } catch (error) {
       setErrorGrant(String(error));
-      setGrantAccess('');
+      setGrantAccess(undefined);
     }
     setLoadingGrant(false);
   };
@@ -125,7 +127,7 @@ export default function Front() {
       const tx = await revokeAccessFunc(
         protectedData,
         authorizedUser,
-        ethers.constants.AddressZero
+        WEB3MAIL_APP_ENS
       );
       setRevokeAccess(tx);
     } catch (error) {
