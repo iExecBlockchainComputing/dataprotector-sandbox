@@ -16,7 +16,6 @@ import {
   grantAccessFunc,
   revokeAccessFunc,
 } from './protectDataFunc';
-import { isAddress } from 'ethers/lib/utils.js';
 import Connect from './Connect';
 import { useAccount, useDisconnect } from 'wagmi';
 import { IEXEC_EXPLORER_URL } from '../utils/config';
@@ -39,7 +38,6 @@ export default function Front() {
 
   //global state
   const [protectedData, setProtectedData] = useState('');
-  const [isValidProtectedData, setIsValidProtectedData] = useState(true);
   const [grantAccess, setGrantAccess] = useState<GrantedAccess>();
   const [revokeAccess, setRevokeAccess] = useState('');
 
@@ -55,7 +53,6 @@ export default function Front() {
 
   //set user restricted address
   const [authorizedUser, setAuthorizedUser] = useState('');
-  const [isValidAuthorizedUser, setIsValidAuthorizedUser] = useState(true);
 
   //handle functions
   const handleEmailChange = (event: any) => {
@@ -69,7 +66,6 @@ export default function Front() {
 
   const handleProtectedDataChange = (event: any) => {
     setProtectedData(event.target.value);
-    setIsValidProtectedData(isAddress(event.target.value));
   };
 
   const handleAccessNumberChange = (event: any) => {
@@ -78,7 +74,6 @@ export default function Front() {
 
   const authorizedUserChange = (event: any) => {
     setAuthorizedUser(event.target.value);
-    setIsValidAuthorizedUser(isAddress(event.target.value));
   };
 
   //handle Submit
@@ -246,11 +241,6 @@ export default function Front() {
                 value={protectedData}
                 onChange={handleProtectedDataChange}
                 type="text"
-                error={!isValidProtectedData}
-                helperText={
-                  !isValidProtectedData &&
-                  'Please enter a valid protectedData address'
-                }
               />
               <TextField
                 fullWidth
@@ -272,10 +262,6 @@ export default function Front() {
                 value={authorizedUser}
                 onChange={authorizedUserChange}
                 type="text"
-                error={!isValidAuthorizedUser}
-                helperText={
-                  !isValidAuthorizedUser && 'Please enter a valid user address'
-                }
               />
               {!loadingGrant && (
                 <Button
@@ -322,11 +308,6 @@ export default function Front() {
                 value={protectedData}
                 onChange={handleProtectedDataChange}
                 type="text"
-                error={!isValidProtectedData}
-                helperText={
-                  !isValidProtectedData &&
-                  'Please enter a valid protectedData address'
-                }
               />
               {!loadingRevoke && (
                 <Button
