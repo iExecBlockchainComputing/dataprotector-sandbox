@@ -1,6 +1,6 @@
 {
   "name": "dataprotector-sandbox",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "start": "vite",
@@ -12,7 +12,7 @@
   "dependencies": {
     "@emotion/react": "latest",
     "@emotion/styled": "latest",
-    "@iexec/dataprotector": "^0.1.0",
+    "@iexec/dataprotector": "^0.1.2",
     "@mui/icons-material": "^5.11.11",
     "@mui/material": "latest",
     "@reduxjs/toolkit": "^1.9.3",
