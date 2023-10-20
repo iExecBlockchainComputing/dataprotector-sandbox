@@ -1,7 +1,7 @@
-import { Box, Button, Typography } from "@mui/material";
-import { useWeb3Modal } from "@web3modal/react";
-import { useAccount, useConnect } from "wagmi";
-import { useEffect } from "react";
+import { Box, Typography } from '@mui/material';
+import { useWeb3Modal } from '@web3modal/react';
+import { useAccount, useConnect } from 'wagmi';
+import { useEffect } from 'react';
 
 export default function Connect() {
   const { open } = useWeb3Modal();
@@ -19,7 +19,7 @@ export default function Connect() {
       {error && <Typography>{error.message}</Typography>}
       {isConnecting && <Typography>Connecting…</Typography>}
       {isDisconnected && (
-        <Typography variant="body2" sx={{ mt: 2, fontStyle: "italic" }}>
+        <Typography variant="body2" sx={{ mt: 2, fontStyle: 'italic' }}>
           Connect your Wallet
         </Typography>
       )}
