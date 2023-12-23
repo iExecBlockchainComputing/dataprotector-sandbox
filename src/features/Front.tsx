@@ -1,136 +1,24 @@
 import { useState } from 'react';
-import {
-  TextField,
-  Typography,
-  Button,
-  Alert,
-  CircularProgress,
-  Link,
-  Box,
-  AppBar,
-  Toolbar,
-  Container,
-} from '@mui/material';
-import {
-  protectDataFunc,
-  grantAccessFunc,
-  revokeAccessFunc,
-} from './protectDataFunc';
-import Connect from './Connect';
+import { Typography, Button, AppBar, Toolbar, Container } from '@mui/material';
 import { useAccount, useDisconnect } from 'wagmi';
-import { IEXEC_EXPLORER_URL } from '../utils/config';
-import { DataSchema, GrantedAccess } from '@iexec/dataprotector';
+import { Address, AddressOrEnsName } from '../utils/types.ts';
+import Connect from './Connect';
+import ProtectDataForm from './ProtectDataForm.tsx';
+import GrantAccessForm from './GrantAccessForm.tsx';
+import RevokeAccessForm from './RevokeAccessForm.tsx';
 
 export default function Front() {
-  //web3mail dapp END
-  const WEB3MAIL_APP_ENS = 'web3mail.apps.iexec.eth';
   //connection with wallet
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
 
-  //loading effect & error
-  const [loadingProtect, setLoadingProtect] = useState(false);
-  const [errorProtect, setErrorProtect] = useState('');
-  const [loadingGrant, setLoadingGrant] = useState(false);
-  const [errorGrant, setErrorGrant] = useState('');
-  const [loadingRevoke, setLoadingRevoke] = useState(false);
-  const [errorRevoke, setErrorRevoke] = useState('');
-
   //global state
-  const [protectedData, setProtectedData] = useState('');
-  const [grantAccess, setGrantAccess] = useState<GrantedAccess>();
-  const [revokeAccess, setRevokeAccess] = useState('');
-
-  //set name
-  const [name, setName] = useState('');
-
-  //set email
-  const [email, setEmail] = useState('');
-  const [isValidEmail, setIsValidEmail] = useState(true);
-
-  //set access number
-  const [accessNumber, setAccessNumber] = useState<number>(1);
+  const [protectedData, setProtectedData] = useState<Address | ''>('');
 
   //set user restricted address
-  const [authorizedUser, setAuthorizedUser] = useState('');
-
-  //handle functions
-  const handleEmailChange = (event: any) => {
-    setEmail(event.target.value);
-    setIsValidEmail(event.target.validity.valid);
-  };
-
-  const handleNameChange = (event: any) => {
-    setName(event.target.value);
-  };
-
-  const handleProtectedDataChange = (event: any) => {
-    setProtectedData(event.target.value);
-  };
-
-  const handleAccessNumberChange = (event: any) => {
-    setAccessNumber(event.target.value);
-  };
-
-  const authorizedUserChange = (event: any) => {
-    setAuthorizedUser(event.target.value);
-  };
-
-  //handle Submit
-  const protectedDataSubmit = async () => {
-    setErrorProtect('');
-    if (email) {
-      const data: DataSchema = { email: email } as DataSchema;
-      try {
-        setLoadingProtect(true);
-        const ProtectedDataAddress = await protectDataFunc(data, name);
-        setProtectedData(ProtectedDataAddress);
-        setErrorProtect('');
-      } catch (error) {
-        setErrorProtect(String(error));
-      }
-      setLoadingProtect(false);
-    } else {
-      setErrorProtect('Please enter a valid email address');
-    }
-  };
-
-  const grantAccessSubmit = async () => {
-    setErrorGrant('');
-    try {
-      setAuthorizedUser(authorizedUser);
-      setLoadingGrant(true);
-      const accessHash = await grantAccessFunc(
-        protectedData,
-        authorizedUser,
-        WEB3MAIL_APP_ENS,
-        accessNumber
-      );
-      setErrorGrant('');
-      setGrantAccess(accessHash);
-    } catch (error) {
-      setErrorGrant(String(error));
-      setGrantAccess(undefined);
-    }
-    setLoadingGrant(false);
-  };
-
-  const revokeAccessSubmit = async () => {
-    setRevokeAccess('');
-    try {
-      setLoadingRevoke(true);
-      const tx = await revokeAccessFunc(
-        protectedData,
-        authorizedUser,
-        WEB3MAIL_APP_ENS
-      );
-      setRevokeAccess(tx);
-    } catch (error) {
-      setErrorRevoke(String(error));
-      setRevokeAccess('');
-    }
-    setLoadingRevoke(false);
-  };
+  const [authorizedUser, setAuthorizedUser] = useState<AddressOrEnsName | ''>(
+    ''
+  );
 
   //wallet address shortening
   const shortAddress = (address: string) => {
@@ -138,7 +26,7 @@ export default function Front() {
   };
 
   return (
-    <Container disableGutters>
+    <Container disableGutters style={{ marginBottom: '120px' }}>
       {isConnected ? (
         <>
           {/**App bar for wallet connection*/}
@@ -163,180 +51,28 @@ export default function Front() {
               </Button>
             </Toolbar>
           </AppBar>
+
           {/**First Box to create a Protected Data*/}
-          <Box id="form-box">
-            <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-              Protect your data
-            </Typography>
-            <TextField
-              required
-              fullWidth
-              id="email"
-              label="Email"
-              variant="outlined"
-              sx={{ mt: 3 }}
-              value={email}
-              onChange={handleEmailChange}
-              type="email"
-              error={!isValidEmail}
-              helperText={!isValidEmail && 'Please enter a valid email address'}
-            />
-            <TextField
-              fullWidth
-              id="name"
-              label="Name"
-              variant="outlined"
-              value={name}
-              onChange={handleNameChange}
-              sx={{ mt: 3 }}
-            />
-            {errorProtect && (
-              <Alert sx={{ mt: 3, mb: 2 }} severity="error">
-                <Typography variant="h6"> Creation failed </Typography>
-                {errorProtect}
-              </Alert>
-            )}
-            {!loadingProtect && (
-              <Button
-                sx={{ display: 'block', margin: '20px auto' }}
-                onClick={protectedDataSubmit}
-                variant="contained"
-              >
-                Create
-              </Button>
-            )}
-            {protectedData && !errorProtect && (
-              <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-                <Typography variant="h6">
-                  Your data has been protected!
-                </Typography>
-                <Link
-                  href={IEXEC_EXPLORER_URL + protectedData}
-                  target="_blank"
-                  sx={{ color: 'green', textDecorationColor: 'green' }}
-                >
-                  You can reach it here
-                </Link>
-                <p>Your protected data address: {protectedData}</p>
-              </Alert>
-            )}
-            {loadingProtect && (
-              <CircularProgress
-                sx={{ display: 'block', margin: '20px auto' }}
-              ></CircularProgress>
-            )}
-          </Box>
+          <ProtectDataForm
+            protectedData={protectedData}
+            setProtectedData={setProtectedData}
+          />
+
           {/**Second Box to grant access to a Protected Data */}
           {protectedData && (
-            <Box id="form-box">
-              <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-                Grant Access for your protected data
-              </Typography>
-              <TextField
-                required
-                fullWidth
-                label="Data Address"
-                variant="outlined"
-                sx={{ mt: 3 }}
-                value={protectedData}
-                onChange={handleProtectedDataChange}
-                type="text"
-              />
-              <TextField
-                fullWidth
-                type="number"
-                id="age"
-                label="Access Number"
-                variant="outlined"
-                value={accessNumber}
-                InputProps={{ inputProps: { min: 1 } }}
-                onChange={handleAccessNumberChange}
-                sx={{ mt: 3 }}
-              />
-              <TextField
-                fullWidth
-                id="authorizedUser"
-                label="User Address Restricted"
-                variant="outlined"
-                sx={{ mt: 3 }}
-                value={authorizedUser}
-                onChange={authorizedUserChange}
-                type="text"
-              />
-              {!loadingGrant && (
-                <Button
-                  id="spacingStyle"
-                  onClick={grantAccessSubmit}
-                  variant="contained"
-                >
-                  Grant Access
-                </Button>
-              )}
-              {errorGrant && (
-                <Alert sx={{ mt: 3, mb: 2 }} severity="error">
-                  <Typography variant="h6"> Grant Access failed </Typography>
-                  {errorGrant}
-                </Alert>
-              )}
-              {grantAccess && !errorGrant && (
-                <>
-                  <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-                    <Typography variant="h6">
-                      Your access has been granted !
-                    </Typography>
-                  </Alert>
-                </>
-              )}
-              {loadingGrant && (
-                <CircularProgress id="spacingStyle"></CircularProgress>
-              )}
-            </Box>
+            <GrantAccessForm
+              protectedData={protectedData}
+              authorizedUser={authorizedUser}
+              setAuthorizedUser={setAuthorizedUser}
+            />
           )}
+
           {/**Third Box to revoke the access given to a Protected Data*/}
-          {grantAccess && (
-            <Box id="form-box">
-              <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-                Revoke Access For Your data
-              </Typography>
-              <TextField
-                required
-                fullWidth
-                id="dataorderAddresssetAddress"
-                label="Data Address"
-                variant="outlined"
-                sx={{ mt: 3 }}
-                value={protectedData}
-                onChange={handleProtectedDataChange}
-                type="text"
-              />
-              {!loadingRevoke && (
-                <Button
-                  id="spacingStyle"
-                  onClick={revokeAccessSubmit}
-                  variant="contained"
-                >
-                  Revoke Access
-                </Button>
-              )}
-              {loadingRevoke && (
-                <CircularProgress id="spacingStyle"></CircularProgress>
-              )}
-              {revokeAccess && !errorRevoke && (
-                <>
-                  <Alert sx={{ mt: 3, mb: 2 }} severity="success">
-                    <Typography variant="h6">
-                      You have successfully revoked access!
-                    </Typography>
-                  </Alert>
-                </>
-              )}
-              {errorRevoke && (
-                <Alert sx={{ mt: 3, mb: 2 }} severity="error">
-                  <Typography variant="h6"> Revoke Access failed </Typography>
-                  {errorRevoke}
-                </Alert>
-              )}
-            </Box>
+          {protectedData && authorizedUser && (
+            <RevokeAccessForm
+              protectedData={protectedData}
+              authorizedUser={authorizedUser}
+            />
           )}
         </>
       ) : (
