@@ -1,15 +1,11 @@
 .form-box {
-  width: 500px;
+  max-width: 500px;
   margin: auto;
 }
 
 .with-space {
   display: block !important;
   margin: 20px auto !important;
-}
-
-.MuiAlert-icon {
-  margin-top: 5.5px;
 }
 
 .input-hint {
@@ -29,4 +25,14 @@
   padding: 0;
   text-decoration: underline;
   cursor: pointer;
+}
+
+/* MUI overrides */
+.MuiAlert-icon {
+  margin-top: 5.5px;
+}
+
+.contains-address .MuiInputBase-input {
+  font-size: 0.875rem;
+  letter-spacing: -0.025em;
 }

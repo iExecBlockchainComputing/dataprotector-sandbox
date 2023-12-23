@@ -26,7 +26,7 @@ export default function Front() {
   };
 
   return (
-    <Container disableGutters style={{ marginBottom: '120px' }}>
+    <Container style={{ marginBottom: '120px' }}>
       {isConnected ? (
         <>
           {/**App bar for wallet connection*/}
@@ -35,7 +35,7 @@ export default function Front() {
             elevation={0}
             sx={{ backgroundColor: 'transparent', width: '100%' }}
           >
-            <Toolbar sx={{ justifyContent: 'space-between' }}>
+            <Toolbar sx={{ justifyContent: 'space-between', padding: 0 }}>
               <Typography
                 sx={{
                   flexGrow: 1,

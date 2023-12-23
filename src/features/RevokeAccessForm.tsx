@@ -58,6 +58,7 @@ export default function RevokeAccessForm({
         variant="outlined"
         value={protectedData}
         sx={{ mt: 3 }}
+        className="contains-address"
       />
       {!loadingRevoke && (
         <Button

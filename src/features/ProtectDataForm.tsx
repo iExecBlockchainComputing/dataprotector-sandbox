@@ -120,7 +120,12 @@ export default function ProtectDataForm({
           >
             You can check it here
           </Link>
-          <p>Your protected data address: {protectedData}</p>
+          <p>
+            Your protected data address:{' '}
+            <span style={{ fontSize: '0.75rem', letterSpacing: '-0.025em' }}>
+              {protectedData}
+            </span>
+          </p>
         </Alert>
       )}
       {loadingProtect && (

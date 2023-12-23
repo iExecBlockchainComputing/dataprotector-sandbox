@@ -76,6 +76,7 @@ export default function GrantAccessForm({
         variant="outlined"
         value={protectedData}
         sx={{ mt: 3 }}
+        className="contains-address"
       />
       <TextField
         type="number"
