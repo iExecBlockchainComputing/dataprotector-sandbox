@@ -12,7 +12,7 @@ import { useAccount } from 'wagmi';
 import type { DataSchema } from '@iexec/dataprotector';
 import { IEXEC_EXPLORER_URL } from '../utils/config.ts';
 import { Address } from '../utils/types.ts';
-import * as dataProtector from './dataProtector.ts';
+import * as dataProtectorClient from '../externals/dataProtector.client.ts';
 
 export default function ProtectDataForm({
   protectedData,
@@ -56,7 +56,7 @@ export default function ProtectDataForm({
     const data: DataSchema = { email: email } as DataSchema;
     try {
       setLoadingProtect(true);
-      const protectedDataAddress = await dataProtector.protectData({
+      const protectedDataAddress = await dataProtectorClient.protectData({
         connector: connector!,
         data,
         name,
@@ -72,7 +72,7 @@ export default function ProtectDataForm({
   return (
     <Box className="form-box">
       <Typography component="h1" variant="h5" sx={{ mt: 3 }}>
-        Protect your data
+        Protect your email address
       </Typography>
       <TextField
         type="email"

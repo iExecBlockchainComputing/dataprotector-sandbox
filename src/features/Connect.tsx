@@ -1,7 +1,7 @@
+import { useEffect } from 'react';
 import { Box, Typography } from '@mui/material';
 import { useWeb3Modal } from '@web3modal/wagmi/react';
 import { useAccount, useConnect } from 'wagmi';
-import { useEffect } from 'react';
 
 export default function Connect() {
   const { open } = useWeb3Modal();

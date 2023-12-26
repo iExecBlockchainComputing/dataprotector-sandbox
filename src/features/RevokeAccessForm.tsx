@@ -10,7 +10,7 @@ import {
 import { useAccount } from 'wagmi';
 import { WEB3MAIL_APP_ENS } from '../utils/constants.ts';
 import { Address, AddressOrEnsName } from '../utils/types.ts';
-import * as dataProtector from './dataProtector.ts';
+import * as dataProtectorClient from '../externals/dataProtector.client.ts';
 
 export default function RevokeAccessForm({
   protectedData,
@@ -31,7 +31,7 @@ export default function RevokeAccessForm({
     setRevokeAccess('');
     try {
       setLoadingRevoke(true);
-      const tx = await dataProtector.revokeAccess({
+      const tx = await dataProtectorClient.revokeAccess({
         connector: connector!,
         protectedData,
         authorizedUser,

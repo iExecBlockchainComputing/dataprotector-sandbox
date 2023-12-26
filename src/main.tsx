@@ -4,7 +4,7 @@ import { ThemeProvider, createTheme } from '@mui/material';
 import { WagmiConfig } from 'wagmi';
 import { wagmiConfig } from './utils/wagmiConfig.ts';
 import './main.css';
-import Front from './features/Front';
+import App from './App.tsx';
 
 const rootElement = document.getElementById('root');
 const root = createRoot(rootElement!);
@@ -23,7 +23,7 @@ root.render(
   <React.StrictMode>
     <ThemeProvider theme={theme}>
       <WagmiConfig config={wagmiConfig}>
-        <Front />
+        <App />
       </WagmiConfig>
     </ThemeProvider>
   </React.StrictMode>

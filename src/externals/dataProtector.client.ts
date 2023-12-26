@@ -2,7 +2,6 @@ import { type Connector } from 'wagmi';
 import { IExecDataProtector, DataSchema } from '@iexec/dataprotector';
 import { Address, AddressOrEnsName } from '../utils/types.ts';
 
-//protect data by calling protectData method from @iexec/dataprotector
 export async function protectData({
   connector,
   data,
@@ -23,7 +22,32 @@ export async function protectData({
   return address as Address;
 }
 
-//revoke access by calling revokeOneAccess method from @iexec/dataprotector
+export async function grantAccess({
+  connector,
+  protectedData,
+  authorizedUser,
+  authorizedApp,
+  pricePerAccess,
+}: {
+  connector: Connector;
+  protectedData: Address;
+  authorizedUser: AddressOrEnsName;
+  authorizedApp: AddressOrEnsName;
+  pricePerAccess: number;
+}) {
+  const provider = await connector.getProvider();
+
+  // Configure private data protector
+  const dataProtector = new IExecDataProtector(provider);
+
+  await dataProtector.grantAccess({
+    protectedData,
+    authorizedUser,
+    authorizedApp,
+    pricePerAccess,
+  });
+}
+
 export async function revokeAccess({
   connector,
   protectedData,
@@ -52,31 +76,4 @@ export async function revokeAccess({
   );
 
   return txHash;
-}
-
-//grant access by calling grantAccess method from @iexec/dataprotector
-export async function grantAccess({
-  connector,
-  protectedData,
-  authorizedUser,
-  authorizedApp,
-  pricePerAccess,
-}: {
-  connector: Connector;
-  protectedData: Address;
-  authorizedUser: AddressOrEnsName;
-  authorizedApp: AddressOrEnsName;
-  pricePerAccess: number;
-}) {
-  const provider = await connector.getProvider();
-
-  // Configure private data protector
-  const dataProtector = new IExecDataProtector(provider);
-
-  await dataProtector.grantAccess({
-    protectedData,
-    authorizedUser,
-    authorizedApp,
-    pricePerAccess,
-  });
 }

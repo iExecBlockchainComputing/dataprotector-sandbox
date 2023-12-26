@@ -10,7 +10,7 @@ import {
 import { useAccount } from 'wagmi';
 import { WEB3MAIL_APP_ENS } from '../utils/constants.ts';
 import { Address, AddressOrEnsName } from '../utils/types.ts';
-import * as dataProtector from './dataProtector.ts';
+import * as dataProtectorClient from '../externals/dataProtector.client.ts';
 
 export default function GrantAccessForm({
   protectedData,
@@ -45,7 +45,7 @@ export default function GrantAccessForm({
     }
     try {
       setLoadingGrant(true);
-      await dataProtector.grantAccess({
+      await dataProtectorClient.grantAccess({
         connector: connector!,
         protectedData,
         authorizedUser: userAddress,

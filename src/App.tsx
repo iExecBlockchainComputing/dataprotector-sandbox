@@ -1,13 +1,13 @@
 import { useState } from 'react';
 import { Typography, Button, AppBar, Toolbar, Container } from '@mui/material';
 import { useAccount, useDisconnect } from 'wagmi';
-import { Address, AddressOrEnsName } from '../utils/types.ts';
-import Connect from './Connect';
-import ProtectDataForm from './ProtectDataForm.tsx';
-import GrantAccessForm from './GrantAccessForm.tsx';
-import RevokeAccessForm from './RevokeAccessForm.tsx';
+import { Address, AddressOrEnsName } from './utils/types.ts';
+import Connect from './features/Connect';
+import ProtectDataForm from './features/ProtectDataForm.tsx';
+import GrantAccessForm from './features/GrantAccessForm.tsx';
+import RevokeAccessForm from './features/RevokeAccessForm.tsx';
 
-export default function Front() {
+export default function App() {
   //connection with wallet
   const { address, isConnected } = useAccount();
   const { disconnect } = useDisconnect();
