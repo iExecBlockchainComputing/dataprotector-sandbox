@@ -18,14 +18,7 @@ export default function Connect() {
     <Box sx={{ mt: 10 }}>
       {error && <Typography>{error.message}</Typography>}
       {isConnecting && <Typography>Connecting…</Typography>}
-      {isDisconnected && (
-        <Typography
-          variant="body2"
-          sx={{ mt: 2, textAlign: 'center', fontStyle: 'italic' }}
-        >
-          Connect your Wallet
-        </Typography>
-      )}
+      {isDisconnected && <Typography>Connect your Wallet</Typography>}
     </Box>
   );
 }
