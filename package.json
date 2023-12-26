@@ -14,7 +14,7 @@
     "@emotion/styled": "^11.11.0",
     "@iexec/dataprotector": "^0.4.1",
     "@mui/icons-material": "^5.15.1",
-    "@mui/material": "latest",
+    "@mui/material": "^5.15.2",
     "@web3modal/wagmi": "^3.5.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
