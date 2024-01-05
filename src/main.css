@@ -1,9 +1,38 @@
-#form-box {
-  width: 500px;
+.form-box {
+  max-width: 500px;
   margin: auto;
 }
 
-#spacingStyle {
-  display: block;
-  margin: 20px auto;
+.with-space {
+  display: block !important;
+  margin: 20px auto !important;
+}
+
+.input-hint {
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  margin-top: 3px;
+  margin-left: 2px;
+}
+
+.btn-text {
+  font-family: "Roboto", sans-serif;
+  font-size: 12px;
+  font-weight: 500;
+  border: none;
+  background-color: transparent;
+  margin: 0;
+  padding: 0;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* MUI overrides */
+.MuiAlert-icon {
+  margin-top: 5.5px;
+}
+
+.contains-address .MuiInputBase-input {
+  font-size: 0.875rem;
+  letter-spacing: -0.025em;
 }
