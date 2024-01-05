@@ -1,4 +1,4 @@
-import { Chain } from '@wagmi/core';
+import { type Chain } from 'wagmi';
 
 export const bellecour = {
   id: 0x86,

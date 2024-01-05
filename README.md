@@ -1,5 +1,7 @@
 <p align="center">
-  <a href="https://iex.ec/" rel="noopener" target="_blank"><img width="150" src="./src/assets/logo-readme.jpg" alt="iExec logo"/></a>
+  <a href="https://iex.ec/" rel="noopener" target="_blank">
+    <img width="150" src="./src/assets/logo-readme.jpg" alt="iExec logo" />
+  </a>
 </p>
 
 <h1 align="center">DataProtector</h1>
@@ -20,8 +22,6 @@ DataProtector bundles 5 methods:
 - fetchGrantedUsage — that provides the list of the apps that are allowed to use existing protected data.
 
 <div align="center">
-
-**[Stable channel v1](https://iex.ec/)**
 
 [![npm](https://img.shields.io/npm/v/@iexec/dataprotector)](https://www.npmjs.com/package/@iexec/dataprotector) [![license](https://img.shields.io/badge/license-Apache%202-blue)](/LICENSE)
 
@@ -45,15 +45,9 @@ npm install @iexec/dataprotector
 yarn add @iexec/dataprotector
 ```
 
-## Get started
-
-[//]: # 'Add initialize code for getting started to use SDK'
-
 ## Documentation
 
-[//]: # 'Add link to documentation gitbook when published'
-
-- [DataProtector](#documentation)
+- [DataProtector](https://tools.docs.iex.ec/tools/dataprotector)
 
 ## License
 
