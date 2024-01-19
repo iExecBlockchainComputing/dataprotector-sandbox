@@ -5,7 +5,7 @@
   "setupTasks": [
     {
       "name": "Install Dependencies",
-      "command": "npm install"
+      "command": "cd packages/codesandbox && npm ci"
     }
   ],
 
@@ -13,7 +13,7 @@
   "tasks": {
     "start": {
       "name": "start",
-      "command": "npm run start",
+      "command": "cd packages/codesandbox && npm run start",
       "runAtStart": true,
       "preview": {
         "port": 5173
@@ -21,22 +21,22 @@
     },
     "build": {
       "name": "build",
-      "command": "npm run build",
+      "command": "cd packages/codesandbox && npm run build",
       "runAtStart": false
     },
     "lint": {
       "name": "lint",
-      "command": "npm run lint",
+      "command": "cd packages/codesandbox && npm run lint",
       "runAtStart": false
     },
     "format": {
       "name": "format",
-      "command": "npm run format",
+      "command": "cd packages/codesandbox && npm run format",
       "runAtStart": false
     },
     "check-format": {
       "name": "check-format",
-      "command": "npm run check-format",
+      "command": "cd packages/codesandbox && npm run check-format",
       "runAtStart": false
     }
   }
