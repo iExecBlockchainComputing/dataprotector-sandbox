@@ -28,13 +28,13 @@ export default function GrantAccessForm({
   const [errorGrant, setErrorGrant] = useState('');
 
   //set access number
-  const [accessNumber, setAccessNumber] = useState<number>(1);
+  const [numberOfAccess, setnumberOfAccess] = useState<number>(1);
 
   //set user address
   const [userAddress, setUserAddress] = useState<AddressOrEnsName>('');
 
-  const handleAccessNumberChange = (event: any) => {
-    setAccessNumber(event.target.value);
+  const handlenumberOfAccessChange = (event: any) => {
+    setnumberOfAccess(event.target.value);
   };
 
   const grantAccessSubmit = async () => {
@@ -50,7 +50,7 @@ export default function GrantAccessForm({
         protectedData,
         authorizedUser: userAddress,
         authorizedApp: WEB3MAIL_APP_ENS,
-        numberOfAccess: accessNumber,
+        numberOfAccess: numberOfAccess,
       });
       setAuthorizedUser(userAddress);
     } catch (error) {
@@ -83,10 +83,10 @@ export default function GrantAccessForm({
         fullWidth
         label="Allowed Access Count"
         variant="outlined"
-        value={accessNumber}
+        value={numberOfAccess}
         sx={{ mt: 3 }}
         InputProps={{ inputProps: { min: 1 } }}
-        onChange={handleAccessNumberChange}
+        onChange={handlenumberOfAccessChange}
       />
       <TextField
         type="text"
