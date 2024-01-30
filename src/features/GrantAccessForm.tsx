@@ -27,14 +27,14 @@ export default function GrantAccessForm({
   const [loadingGrant, setLoadingGrant] = useState(false);
   const [errorGrant, setErrorGrant] = useState('');
 
-  //set access number
-  const [numberOfAccess, setnumberOfAccess] = useState<number>(1);
+  //set number of access
+  const [numberOfAccess, setNumberOfAccess] = useState<number>(1);
 
   //set user address
   const [userAddress, setUserAddress] = useState<AddressOrEnsName>('');
 
-  const handlenumberOfAccessChange = (event: any) => {
-    setnumberOfAccess(event.target.value);
+  const handleNumberOfAccessChange = (event: any) => {
+    setNumberOfAccess(event.target.value);
   };
 
   const grantAccessSubmit = async () => {
@@ -50,7 +50,7 @@ export default function GrantAccessForm({
         protectedData,
         authorizedUser: userAddress,
         authorizedApp: WEB3MAIL_APP_ENS,
-        numberOfAccess: numberOfAccess,
+        numberOfAccess,
       });
       setAuthorizedUser(userAddress);
     } catch (error) {
@@ -86,7 +86,7 @@ export default function GrantAccessForm({
         value={numberOfAccess}
         sx={{ mt: 3 }}
         InputProps={{ inputProps: { min: 1 } }}
-        onChange={handlenumberOfAccessChange}
+        onChange={handleNumberOfAccessChange}
       />
       <TextField
         type="text"
