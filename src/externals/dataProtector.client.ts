@@ -27,13 +27,13 @@ export async function grantAccess({
   protectedData,
   authorizedUser,
   authorizedApp,
-  pricePerAccess,
+  numberOfAccess,
 }: {
   connector: Connector;
   protectedData: Address;
   authorizedUser: AddressOrEnsName;
   authorizedApp: AddressOrEnsName;
-  pricePerAccess: number;
+  numberOfAccess: number;
 }) {
   const provider = await connector.getProvider();
 
@@ -44,7 +44,7 @@ export async function grantAccess({
     protectedData,
     authorizedUser,
     authorizedApp,
-    pricePerAccess,
+    numberOfAccess,
   });
 }
 

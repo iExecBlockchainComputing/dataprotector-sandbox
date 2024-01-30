@@ -50,7 +50,7 @@ export default function GrantAccessForm({
         protectedData,
         authorizedUser: userAddress,
         authorizedApp: WEB3MAIL_APP_ENS,
-        pricePerAccess: accessNumber,
+        numberOfAccess: accessNumber,
       });
       setAuthorizedUser(userAddress);
     } catch (error) {
