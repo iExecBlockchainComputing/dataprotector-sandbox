@@ -1,5 +1,5 @@
 import { type Connector } from 'wagmi';
-import { IExecDataProtector, DataSchema } from '@iexec/dataprotector';
+import { DataSchema, DataProtector } from '@iexec/dataprotector';
 import { Address, AddressOrEnsName } from '../utils/types.ts';
 
 export async function protectData({
@@ -13,7 +13,7 @@ export async function protectData({
 }) {
   const provider = await connector.getProvider();
 
-  const dataProtector = new IExecDataProtector(provider);
+  const dataProtector = new DataProtector(provider);
 
   const { address } = await dataProtector.protectData({
     data,
@@ -38,7 +38,7 @@ export async function grantAccess({
   const provider = await connector.getProvider();
 
   // Configure private data protector
-  const dataProtector = new IExecDataProtector(provider);
+  const dataProtector = new DataProtector(provider);
 
   await dataProtector.grantAccess({
     protectedData,
@@ -61,7 +61,7 @@ export async function revokeAccess({
 }) {
   const provider = await connector.getProvider();
 
-  const dataProtector = new IExecDataProtector(provider);
+  const dataProtector = new DataProtector(provider);
 
   const grantedAccessArray = await dataProtector.fetchGrantedAccess({
     protectedData,
