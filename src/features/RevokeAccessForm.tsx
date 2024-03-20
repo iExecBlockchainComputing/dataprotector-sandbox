@@ -1,3 +1,4 @@
+import { DataProtector } from '@iexec/dataprotector';
 import { useState } from 'react';
 import {
   Alert,
@@ -7,10 +8,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useAccount } from 'wagmi';
+import { Connector, useAccount } from 'wagmi';
 import { WEB3MAIL_APP_ENS } from '../utils/constants.ts';
 import { Address, AddressOrEnsName } from '../utils/types.ts';
-import * as dataProtectorClient from '../externals/dataProtector.client.ts';
 
 export default function RevokeAccessForm({
   protectedData,
@@ -19,7 +19,8 @@ export default function RevokeAccessForm({
   protectedData: Address;
   authorizedUser: AddressOrEnsName;
 }) {
-  const { connector } = useAccount();
+  // ProtectDataForm only displayed if user is logged in
+  const { connector } = useAccount() as { connector: Connector };
 
   //loading effect & error
   const [loadingRevoke, setLoadingRevoke] = useState(false);
@@ -31,13 +32,22 @@ export default function RevokeAccessForm({
     setRevokeAccess('');
     try {
       setLoadingRevoke(true);
-      const tx = await dataProtectorClient.revokeAccess({
-        connector: connector!,
+
+      const provider = await connector.getProvider();
+      const dataProtector = new DataProtector(provider);
+      const allGrantedAccess = await dataProtector.fetchGrantedAccess({
         protectedData,
         authorizedUser,
         authorizedApp: WEB3MAIL_APP_ENS,
       });
-      setRevokeAccess(tx);
+      if (allGrantedAccess.count === 0) {
+        throw new Error('No access to revoke');
+      }
+      const { txHash } = await dataProtector.revokeOneAccess(
+        allGrantedAccess.grantedAccess[0]
+      );
+
+      setRevokeAccess(txHash);
     } catch (error) {
       setErrorRevoke(String(error));
       setRevokeAccess('');

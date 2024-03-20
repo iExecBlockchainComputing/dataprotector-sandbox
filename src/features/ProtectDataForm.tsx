@@ -8,11 +8,10 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useAccount } from 'wagmi';
-import type { DataSchema } from '@iexec/dataprotector';
+import { Connector, useAccount } from 'wagmi';
+import { DataProtector, DataSchema } from '@iexec/dataprotector';
 import { IEXEC_EXPLORER_URL } from '../utils/config.ts';
 import { Address } from '../utils/types.ts';
-import * as dataProtectorClient from '../externals/dataProtector.client.ts';
 
 export default function ProtectDataForm({
   protectedData,
@@ -21,7 +20,8 @@ export default function ProtectDataForm({
   protectedData: Address | '';
   setProtectedData: (protectedData: Address) => void;
 }) {
-  const { connector } = useAccount();
+  // ProtectDataForm only displayed if user is logged in
+  const { connector } = useAccount() as { connector: Connector };
 
   //loading effect & error
   const [loadingProtect, setLoadingProtect] = useState(false);
@@ -56,12 +56,16 @@ export default function ProtectDataForm({
     const data: DataSchema = { email: email } as DataSchema;
     try {
       setLoadingProtect(true);
-      const protectedDataAddress = await dataProtectorClient.protectData({
-        connector: connector!,
-        data,
-        name,
-      });
-      setProtectedData(protectedDataAddress);
+
+      const provider = await connector.getProvider();
+      const dataProtector = new DataProtector(provider);
+      const { address: protectedDataAddress } = await dataProtector.protectData(
+        {
+          data,
+          name,
+        }
+      );
+      setProtectedData(protectedDataAddress as Address);
       setErrorProtect('');
     } catch (error) {
       setErrorProtect(String(error));
