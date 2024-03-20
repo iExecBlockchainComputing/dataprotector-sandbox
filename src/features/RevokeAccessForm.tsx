@@ -1,4 +1,4 @@
-import { DataProtector } from '@iexec/dataprotector';
+import { IExecDataProtector } from '@iexec/dataprotector';
 import { useState } from 'react';
 import {
   Alert,
@@ -34,7 +34,7 @@ export default function RevokeAccessForm({
       setLoadingRevoke(true);
 
       const provider = await connector.getProvider();
-      const dataProtector = new DataProtector(provider);
+      const dataProtector = new IExecDataProtector(provider);
       const allGrantedAccess = await dataProtector.fetchGrantedAccess({
         protectedData,
         authorizedUser,
