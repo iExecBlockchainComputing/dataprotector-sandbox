@@ -1,3 +1,4 @@
+import { DataProtector } from '@iexec/dataprotector';
 import { useState } from 'react';
 import {
   Alert,
@@ -7,10 +8,9 @@ import {
   TextField,
   Typography,
 } from '@mui/material';
-import { useAccount } from 'wagmi';
+import { Connector, useAccount } from 'wagmi';
 import { WEB3MAIL_APP_ENS } from '../utils/constants.ts';
 import { Address, AddressOrEnsName } from '../utils/types.ts';
-import * as dataProtectorClient from '../externals/dataProtector.client.ts';
 
 export default function GrantAccessForm({
   protectedData,
@@ -21,7 +21,11 @@ export default function GrantAccessForm({
   authorizedUser: AddressOrEnsName | '';
   setAuthorizedUser: (authorizedUser: AddressOrEnsName) => void;
 }) {
-  const { connector, address } = useAccount();
+  // ProtectDataForm only displayed if user is logged in
+  const { connector, address } = useAccount() as {
+    connector: Connector;
+    address: Address;
+  };
 
   //loading effect & error
   const [loadingGrant, setLoadingGrant] = useState(false);
@@ -45,13 +49,16 @@ export default function GrantAccessForm({
     }
     try {
       setLoadingGrant(true);
-      await dataProtectorClient.grantAccess({
-        connector: connector!,
+
+      const provider = await connector.getProvider();
+      const dataProtector = new DataProtector(provider);
+      await dataProtector.grantAccess({
         protectedData,
         authorizedUser: userAddress,
         authorizedApp: WEB3MAIL_APP_ENS,
         numberOfAccess,
       });
+
       setAuthorizedUser(userAddress);
     } catch (error) {
       setErrorGrant(String(error));
