@@ -1,4 +1,4 @@
-import { DataProtector } from '@iexec/dataprotector';
+import { IExecDataProtector } from '@iexec/dataprotector';
 import { useState } from 'react';
 import {
   Alert,
@@ -51,7 +51,7 @@ export default function GrantAccessForm({
       setLoadingGrant(true);
 
       const provider = await connector.getProvider();
-      const dataProtector = new DataProtector(provider);
+      const dataProtector = new IExecDataProtector(provider);
       await dataProtector.grantAccess({
         protectedData,
         authorizedUser: userAddress,
