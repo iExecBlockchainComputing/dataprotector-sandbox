@@ -15,6 +15,6 @@ npm ci
 ## Running the project
 
 ```sh
-npm run start
+npm start
 ```
 
