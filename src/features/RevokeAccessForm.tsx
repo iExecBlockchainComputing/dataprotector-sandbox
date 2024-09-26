@@ -1,5 +1,5 @@
-import { IExecDataProtector } from '@iexec/dataprotector';
 import { useState } from 'react';
+import { IExecDataProtectorCore } from '@iexec/dataprotector';
 import {
   Alert,
   Box,
@@ -34,8 +34,8 @@ export default function RevokeAccessForm({
       setLoadingRevoke(true);
 
       const provider = await connector.getProvider();
-      const dataProtector = new IExecDataProtector(provider);
-      const allGrantedAccess = await dataProtector.fetchGrantedAccess({
+      const dataProtector = new IExecDataProtectorCore(provider);
+      const allGrantedAccess = await dataProtector.getGrantedAccess({
         protectedData,
         authorizedUser,
         authorizedApp: WEB3MAIL_APP_ENS,

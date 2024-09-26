@@ -13,7 +13,7 @@
   "dependencies": {
     "@emotion/react": "^11.11.1",
     "@emotion/styled": "^11.11.0",
-    "@iexec/dataprotector": "^1.0.0",
+    "@iexec/dataprotector": "^2.0.0-beta.10",
     "@mui/icons-material": "^5.15.1",
     "@mui/material": "^5.15.2",
     "@web3modal/wagmi": "^3.5.2",
