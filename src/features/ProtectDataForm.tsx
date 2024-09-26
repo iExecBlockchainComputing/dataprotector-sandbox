@@ -9,7 +9,7 @@ import {
   Typography,
 } from '@mui/material';
 import { Connector, useAccount } from 'wagmi';
-import { IExecDataProtector, type DataSchema } from '@iexec/dataprotector';
+import { IExecDataProtectorCore, type DataSchema } from '@iexec/dataprotector';
 import { IEXEC_EXPLORER_URL } from '../utils/config.ts';
 import { Address } from '../utils/types.ts';
 
@@ -58,7 +58,7 @@ export default function ProtectDataForm({
       setLoadingProtect(true);
 
       const provider = await connector.getProvider();
-      const dataProtector = new IExecDataProtector(provider);
+      const dataProtector = new IExecDataProtectorCore(provider);
       const { address: protectedDataAddress } = await dataProtector.protectData(
         {
           data,
