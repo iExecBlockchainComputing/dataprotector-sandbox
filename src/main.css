@@ -1,38 +1,14 @@
-.form-box {
-  max-width: 500px;
-  margin: auto;
+#root {
+  font-family: Inter, system-ui, Avenir, Helvetica, Arial, sans-serif;
+  line-height: 1.5;
+  font-weight: 400;
+  color: #213547;
+  background-color: #ffffff;
+  text-align: left;
 }
 
-.with-space {
-  display: block !important;
-  margin: 20px auto !important;
-}
-
-.input-hint {
-  font-family: "Roboto", sans-serif;
-  font-size: 12px;
-  margin-top: 3px;
-  margin-left: 2px;
-}
-
-.btn-text {
-  font-family: "Roboto", sans-serif;
-  font-size: 12px;
-  font-weight: 500;
-  border: none;
-  background-color: transparent;
+body {
   margin: 0;
-  padding: 0;
-  text-decoration: underline;
-  cursor: pointer;
-}
-
-/* MUI overrides */
-.MuiAlert-icon {
-  margin-top: 5.5px;
-}
-
-.contains-address .MuiInputBase-input {
-  font-size: 0.875rem;
-  letter-spacing: -0.025em;
+  min-width: 320px;
+  min-height: 100vh;
 }
