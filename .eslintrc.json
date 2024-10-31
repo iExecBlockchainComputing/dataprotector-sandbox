@@ -20,7 +20,8 @@
     "sonarjs/cognitive-complexity": "warn",
     "@typescript-eslint/no-explicit-any": "warn",
     "react/react-in-jsx-scope": "off",
-    "import/extensions": "off"
+    "import/extensions": "off",
+    "sonarjs/no-duplicate-string": "off"
   },
   "settings": {
     "react": {

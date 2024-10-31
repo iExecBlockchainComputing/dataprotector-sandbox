@@ -1,9 +1,12 @@
 import { useState } from 'react';
-import { IExecDataProtector } from '@iexec/dataprotector';
-import { Address, AddressOrEnsName } from './utils/types.ts';
-import { WEB3MAIL_APP_ENS } from './utils/constants.ts';
-import { IEXEC_EXPLORER_URL } from './utils/config.ts';
-import { checkCurrentChain, checkIsConnected } from './utils/utils.ts';
+import { Address, IExecDataProtector } from '@iexec/dataprotector';
+import {
+  AddressOrEnsName,
+  checkCurrentChain,
+  checkIsConnected,
+  IEXEC_EXPLORER_URL,
+  WEB3MAIL_APP_ENS,
+} from './utils/utils.ts';
 import './App.css';
 import loader from './assets/loader.gif';
 import successIcon from './assets/success.png';
@@ -150,7 +153,7 @@ export default function App() {
   };
 
   return (
-    <div style={{ marginBottom: '120px', padding: '20px' }}>
+    <>
       {/* Protect Data Form */}
       <div>
         <h2>Protect your email address</h2>
@@ -202,7 +205,11 @@ export default function App() {
               style={{ verticalAlign: 'middle' }}
             />
             Your data has been protected!
-            <a href={IEXEC_EXPLORER_URL + protectedData} target="_blank">
+            <a
+              href={IEXEC_EXPLORER_URL + protectedData}
+              rel="noreferrer"
+              target="_blank"
+            >
               You can check it here
             </a>
             <p>
@@ -319,6 +326,6 @@ export default function App() {
           )}
         </div>
       )}
-    </div>
+    </>
   );
 }

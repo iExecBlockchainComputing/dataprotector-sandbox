@@ -1,3 +1,11 @@
+export type Address = `0x${string}`;
+
+export type AddressOrEnsName = Address | string;
+
+export const IEXEC_EXPLORER_URL = 'https://explorer.iex.ec/bellecour/dataset/';
+
+export const WEB3MAIL_APP_ENS = 'web3mail.apps.iexec.eth';
+
 const IEXEC_CHAIN_ID = '0x86'; // 134
 
 export function checkIsConnected() {
