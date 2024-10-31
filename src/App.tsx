@@ -153,27 +153,35 @@ export default function App() {
     <div style={{ marginBottom: '120px', padding: '20px' }}>
       {/* Protect Data Form */}
       <div>
-        <h1>Protect your email address</h1>
-        <div style={{ marginTop: '20px' }}>
-          <input
-            type="email"
-            required
-            value={email}
-            placeholder="Email"
-            onChange={handleEmailChange}
-          />
-          {!isValidEmail && (
-            <div style={{ color: 'red' }}>
-              Please enter a valid email address
-            </div>
-          )}
+        <h2>Protect your email address</h2>
+        <div>
+          <label>
+            Email:{' '}
+            <input
+              type="email"
+              required
+              value={email}
+              placeholder="Email"
+              onChange={handleEmailChange}
+            />
+            {!isValidEmail && (
+              <div style={{ color: 'red' }}>
+                Please enter a valid email address
+              </div>
+            )}
+          </label>
         </div>
-        <input
-          type="text"
-          value={name}
-          placeholder="Name"
-          onChange={handleNameChange}
-        />
+        <div>
+          <label>
+            ProtectedData Name:{' '}
+            <input
+              type="text"
+              value={name}
+              placeholder="Name"
+              onChange={handleNameChange}
+            />{' '}
+          </label>
+        </div>
         {errorProtect && (
           <div style={{ marginTop: '10px', maxWidth: 300, color: 'red' }}>
             <h6>Creation failed</h6>
@@ -181,9 +189,7 @@ export default function App() {
           </div>
         )}
         {!loadingProtect ? (
-          <button className="with-space" onClick={protectedDataSubmit}>
-            Create
-          </button>
+          <button onClick={protectedDataSubmit}>Create</button>
         ) : (
           <img src={loader} alt="loading" height="30px" />
         )}
@@ -196,17 +202,11 @@ export default function App() {
               style={{ verticalAlign: 'middle' }}
             />
             Your data has been protected!
-            <a
-              href={IEXEC_EXPLORER_URL + protectedData}
-              target="_blank"
-              className="success-link"
-              rel="noreferrer"
-            >
+            <a href={IEXEC_EXPLORER_URL + protectedData} target="_blank">
               You can check it here
             </a>
             <p>
-              Your protected data address:{' '}
-              <span className="protected-address">{protectedData}</span>
+              Your protected data address: <span>{protectedData}</span>
             </p>
           </div>
         )}
@@ -216,45 +216,51 @@ export default function App() {
       {protectedData && (
         <div>
           <hr style={{ marginTop: '30px' }} />
-          <h1>Grant Access to your protected data</h1>
-          <input
-            type="text"
-            disabled
-            value={protectedData}
-            className="contains-address"
-            placeholder="Protected Data Address"
-          />
-          <input
-            type="number"
-            value={numberOfAccess}
-            className="contains-number"
-            placeholder="Allowed Access Count"
-            min={1}
-            onChange={handleNumberOfAccessChange}
-          />
-          <input
-            type="text"
-            value={userAddress}
-            className="contains-user-address"
-            placeholder="User Address Restricted"
-            required
-            onChange={(event) => setUserAddress(event.target.value)}
-          />
-          <div className="input-hint">
+          <div>
+            <h2>Grant Access to your protected data</h2>
+            <label>
+              Protected Data Address:{' '}
+              <input
+                type="text"
+                disabled
+                value={protectedData}
+                placeholder="Protected Data Address"
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              Number of Access:{' '}
+              <input
+                type="number"
+                value={numberOfAccess}
+                placeholder="Allowed Access Count"
+                min={1}
+                onChange={handleNumberOfAccessChange}
+              />
+            </label>
+          </div>
+          <div>
+            <label>
+              User Address Restricted:{' '}
+              <input
+                type="text"
+                value={userAddress}
+                placeholder="User Address Restricted"
+                required
+                onChange={(event) => setUserAddress(event.target.value)}
+              />
+            </label>
+          </div>
+          <div>
             For testing here, you can{' '}
-            <button
-              type="button"
-              className="btn-text"
-              onClick={shareWithYourself}
-            >
+            <button type="button" onClick={shareWithYourself}>
               enter your own wallet address
             </button>
             .
           </div>
           {!loadingGrant ? (
-            <button className="with-space" onClick={grantAccessSubmit}>
-              Grant Access
-            </button>
+            <button onClick={grantAccessSubmit}>Grant Access</button>
           ) : (
             <img src={loader} alt="loading" height="30px" />
           )}
@@ -281,17 +287,16 @@ export default function App() {
       {/* Revoke Access Form */}
       {protectedData && authorizedUser && (
         <div>
-          <h1>Revoke Access to your protected data</h1>
-          <input
-            type="text"
-            disabled
-            value={protectedData}
-            className="contains-address"
-          />
+          <hr style={{ marginTop: '30px' }} />
+          <div>
+            <h2>Revoke Access to your protected data</h2>
+            <label>
+              Revoke Access for protectData:{' '}
+              <input type="text" disabled value={protectedData} />
+            </label>
+          </div>
           {!loadingRevoke ? (
-            <button className="with-space" onClick={revokeAccessSubmit}>
-              Revoke Access
-            </button>
+            <button onClick={revokeAccessSubmit}>Revoke Access</button>
           ) : (
             <img src={loader} alt="loading" height="30px" />
           )}
