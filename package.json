@@ -3,7 +3,7 @@
   "version": "0.0.0",
   "type": "module",
   "scripts": {
-    "start": "vite",
+    "dev": "vite",
     "build": "tsc && vite build",
     "check-types": "tsc --noEmit",
     "lint": "eslint .",
@@ -11,15 +11,9 @@
     "check-format": "prettier --check \"src/**/*.ts\""
   },
   "dependencies": {
-    "@emotion/react": "^11.11.1",
-    "@emotion/styled": "^11.11.0",
     "@iexec/dataprotector": "^2.0.0-beta.10",
-    "@mui/icons-material": "^5.15.1",
-    "@mui/material": "^5.15.2",
-    "@web3modal/wagmi": "^3.5.2",
     "react": "^18.2.0",
-    "react-dom": "^18.2.0",
-    "wagmi": "^1.4.12"
+    "react-dom": "^18.2.0"
   },
   "devDependencies": {
     "@types/react": "^18.2.45",
