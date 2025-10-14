@@ -1,20 +1,21 @@
 import { useState } from 'react';
-import { Address, IExecDataProtector } from '@iexec/dataprotector';
+import { Address } from '@iexec/dataprotector';
 import {
   AddressOrEnsName,
-  checkCurrentChain,
   checkIsConnected,
   IEXEC_EXPLORER_URL,
   WEB3MAIL_APP_ENS,
+  SUPPORTED_CHAINS,
 } from './utils/utils.ts';
+import { getDataProtectorCoreClient, initDataProtectorClient } from './externals/dataProtectorClient';
+import { useWalletConnection } from './hooks/useWalletConnection';
 import './App.css';
 import loader from './assets/loader.gif';
 import successIcon from './assets/success.png';
 
-const iExecDataProtectorClient = new IExecDataProtector(window.ethereum);
-
 export default function App() {
-  // Global state
+  const { isConnected, address, chainId } = useWalletConnection();
+  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[0].id);
   const [protectedData, setProtectedData] = useState<Address | ''>('');
   const [authorizedUser, setAuthorizedUser] = useState<AddressOrEnsName | ''>(
     ''
@@ -36,14 +37,85 @@ export default function App() {
   const [userAddress, setUserAddress] = useState<AddressOrEnsName>('');
   const [revokeAccess, setRevokeAccess] = useState('');
 
+  const switchToChain = async (targetChainId: number) => {
+    if (!window.ethereum) {
+      throw new Error('MetaMask not installed');
+    }
+
+    // Find the chain configuration
+    const chain = SUPPORTED_CHAINS.find(c => c.id === targetChainId);
+    if (!chain) {
+      throw new Error(`Chain with ID ${targetChainId} not supported`);
+    }
+
+    const chainIdHex = `0x${targetChainId.toString(16)}`;
+
+    try {
+      // Switch to existing chain
+      await window.ethereum.request({
+        method: 'wallet_switchEthereumChain',
+        params: [{ chainId: chainIdHex }],
+      });
+    } catch (switchError: unknown) {
+      // If chain doesn't exist in MetaMask (error 4902), add it
+      if ((switchError as { code?: number }).code === 4902) {
+        await window.ethereum.request({
+          method: 'wallet_addEthereumChain',
+          params: [
+            {
+              chainId: chainIdHex,
+              chainName: chain.name,
+              nativeCurrency: {
+                name: chain.tokenSymbol,
+                symbol: chain.tokenSymbol,
+                decimals: 18,
+              },
+              rpcUrls: chain.rpcUrls,
+              blockExplorerUrls: [chain.blockExplorerUrl],
+            },
+          ],
+        });
+      } else {
+        throw switchError;
+      }
+    }
+  };
+
+  const handleChainChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+    const newChainId = Number(event.target.value);
+    setSelectedChain(newChainId);
+
+    // Reset protected data state when switching chains
+    setProtectedData('');
+    setAuthorizedUser('');
+    setRevokeAccess('');
+    setErrorProtect('');
+    setErrorGrant('');
+    setErrorRevoke('');
+
+    // Switch MetaMask to the selected chain
+    try {
+      await switchToChain(newChainId);
+    } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Failed to switch chain:', error);
+    }
+  };
+
   const protectedDataSubmit = async () => {
     setErrorProtect('');
 
     try {
       checkIsConnected();
-      await checkCurrentChain();
+      await switchToChain(selectedChain);
+
+      // Reinitialize the DataProtector client with the correct chain
+      await initDataProtectorClient({
+        provider: window.ethereum,
+        chainId: selectedChain
+      });
     } catch (err) {
-      setErrorProtect('Please install MetaMask');
+      setErrorProtect('Please install MetaMask or switch to the correct chain');
       return;
     }
 
@@ -55,15 +127,28 @@ export default function App() {
     const data = { email };
     try {
       setLoadingProtect(true);
+      const client = await getDataProtectorCoreClient();
       const protectedDataResponse =
-        await iExecDataProtectorClient.core.protectData({
+        await client.protectData({
           data,
           name,
         });
       setProtectedData(protectedDataResponse.address as Address);
       setErrorProtect('');
     } catch (error) {
-      setErrorProtect(String(error));
+      // eslint-disable-next-line no-console
+      console.error('Protected data creation error:', error);
+
+      // Provide more specific error messages
+      if (String(error).includes('Internal JSON-RPC error')) {
+        setErrorProtect('RPC Error: Please check your network connection and ensure you have sufficient xRLC for gas fees on Bellecour');
+      } else if (String(error).includes('insufficient funds')) {
+        setErrorProtect('Insufficient funds: Please ensure you have enough xRLC tokens for gas fees');
+      } else if (String(error).includes('user rejected')) {
+        setErrorProtect('Transaction rejected by user');
+      } else {
+        setErrorProtect(String(error));
+      }
     }
     setLoadingProtect(false);
   };
@@ -72,9 +157,15 @@ export default function App() {
     setErrorGrant('');
     try {
       checkIsConnected();
-      await checkCurrentChain();
+      await switchToChain(selectedChain);
+
+      // Reinitialize the DataProtector client with the correct chain
+      await initDataProtectorClient({
+        provider: window.ethereum,
+        chainId: selectedChain
+      });
     } catch (err) {
-      setErrorGrant('Please install MetaMask');
+      setErrorGrant('Please install MetaMask or switch to the correct chain');
       return;
     }
 
@@ -84,7 +175,8 @@ export default function App() {
     }
     try {
       setLoadingGrant(true);
-      await iExecDataProtectorClient.core.grantAccess({
+      const client = await getDataProtectorCoreClient();
+      await client.grantAccess({
         protectedData,
         authorizedUser: userAddress,
         authorizedApp: WEB3MAIL_APP_ENS,
@@ -92,6 +184,8 @@ export default function App() {
       });
       setAuthorizedUser(userAddress);
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Grant access error:', error);
       setErrorGrant(String(error));
     }
     setLoadingGrant(false);
@@ -101,16 +195,23 @@ export default function App() {
     setRevokeAccess('');
     try {
       checkIsConnected();
-      await checkCurrentChain();
+      await switchToChain(selectedChain);
+
+      // Reinitialize the DataProtector client with the correct chain
+      await initDataProtectorClient({
+        provider: window.ethereum,
+        chainId: selectedChain
+      });
     } catch (err) {
-      setErrorRevoke('Please install MetaMask');
+      setErrorRevoke('Please install MetaMask or switch to the correct chain');
       return;
     }
 
     try {
       setLoadingRevoke(true);
+      const client = await getDataProtectorCoreClient();
       const allGrantedAccess =
-        await iExecDataProtectorClient.core.getGrantedAccess({
+        await client.getGrantedAccess({
           protectedData,
           authorizedUser,
           authorizedApp: WEB3MAIL_APP_ENS,
@@ -118,11 +219,13 @@ export default function App() {
       if (allGrantedAccess.count === 0) {
         throw new Error('No access to revoke');
       }
-      const { txHash } = await iExecDataProtectorClient.core.revokeOneAccess(
+      const { txHash } = await client.revokeOneAccess(
         allGrantedAccess.grantedAccess[0]
       );
       setRevokeAccess(txHash);
     } catch (error) {
+      // eslint-disable-next-line no-console
+      console.error('Revoke access error:', error);
       setErrorRevoke(String(error));
       setRevokeAccess('');
     }
@@ -130,17 +233,17 @@ export default function App() {
   };
 
   // Handlers
-  const handleEmailChange = (event: any) => {
+  const handleEmailChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setEmail(event.target.value);
     setIsValidEmail(event.target.validity.valid);
   };
 
-  const handleNameChange = (event: any) => {
+  const handleNameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setName(event.target.value);
   };
 
-  const handleNumberOfAccessChange = (event: any) => {
-    setNumberOfAccess(event.target.value);
+  const handleNumberOfAccessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setNumberOfAccess(Number(event.target.value));
   };
 
   const shareWithYourself = async () => {
@@ -154,6 +257,44 @@ export default function App() {
 
   return (
     <>
+      {/* Chain Selection */}
+      <div style={{ marginBottom: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
+        <h2 style={{ margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+          Chain Selection
+          <select
+            value={selectedChain}
+            onChange={handleChainChange}
+            style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }}
+          >
+            {SUPPORTED_CHAINS.map((chain) => (
+              <option key={chain.id} value={chain.id}>
+                {chain.name}
+              </option>
+            ))}
+          </select>
+        </h2>
+        <p style={{ margin: '5px 0', color: '#666' }}>
+          Selected chain: {SUPPORTED_CHAINS.find(c => c.id === selectedChain)?.name} (ID: {selectedChain})
+        </p>
+
+        {/* Wallet Status */}
+        <div style={{ marginTop: '10px', fontSize: '14px' }}>
+          <p style={{ margin: '2px 0' }}>
+            <strong>Wallet Status:</strong> {isConnected ? 'Connected' : 'Disconnected'}
+          </p>
+          {address && (
+            <p style={{ margin: '2px 0' }}>
+              <strong>Address:</strong> {address.slice(0, 6)}...{address.slice(-4)}
+            </p>
+          )}
+          {chainId && (
+            <p style={{ margin: '2px 0' }}>
+              <strong>Current MetaMask Chain:</strong> {SUPPORTED_CHAINS.find(c => c.id === chainId)?.name || `Chain ${chainId}`}
+            </p>
+          )}
+        </div>
+      </div>
+
       {/* Protect Data Form */}
       <div>
         <h2>Protect your email address</h2>
