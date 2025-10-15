@@ -27,7 +27,7 @@ export async function initDataProtectorClient({
   // Only reinitialize if chain has changed
   if (currentChainId !== chainId) {
     try {
-      const dataProtectorParent = new IExecDataProtector(provider as Eip1193Provider, { allowExperimentalNetworks: true });
+      const dataProtectorParent = new IExecDataProtector(provider as Eip1193Provider);
       iExecDataProtectorCore = dataProtectorParent.core;
       currentChainId = chainId || null;
     } catch (error) {
