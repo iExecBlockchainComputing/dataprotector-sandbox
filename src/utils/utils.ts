@@ -15,13 +15,8 @@ export const SUPPORTED_CHAINS = [
     blockExplorerUrl: 'https://blockscout-bellecour.iex.ec',
     tokenSymbol: 'xRLC',
     rpcUrls: ['https://bellecour.iex.ec'],
-  },
-  {
-    id: 42161,
-    name: 'Arbitrum',
-    blockExplorerUrl: 'https://arbiscan.io/',
-    tokenSymbol: 'RLC',
-    rpcUrls: ['https://arb1.arbitrum.io/rpc'],
+    explorerUrl: 'https://explorer.iex.ec/bellecour/dataset/',
+    web3mailAppAddress: 'web3mail.apps.iexec.eth',
   },
   {
     id: 421614,
@@ -29,6 +24,17 @@ export const SUPPORTED_CHAINS = [
     blockExplorerUrl: 'https://sepolia.arbiscan.io/',
     tokenSymbol: 'RLC',
     rpcUrls: ['https://sepolia-rollup.arbitrum.io/rpc'],
+    explorerUrl: 'https://explorer.iex.ec/arbitrum-sepolia-testnet/dataset/',
+    web3mailAppAddress: '0x54f48937d1a26dd250dc8adbef07bc76f6e27df3',
+  },
+  {
+    id: 42161,
+    name: 'Arbitrum',
+    blockExplorerUrl: 'https://arbiscan.io/',
+    tokenSymbol: 'RLC',
+    rpcUrls: ['https://arb1.arbitrum.io/rpc', 'https://1rpc.io/arb'],
+    explorerUrl: 'https://explorer.iex.ec/abritrum-mainnet/dataset/',
+    web3mailAppAddress: '0xcf0289a65a455a8d3c90153b796e8133e985b26c',
   },
 ];
 
@@ -46,10 +52,12 @@ export async function checkCurrentChain(selectedChainId?: number) {
     params: [],
   });
 
-  const targetChainId = selectedChainId ? `0x${selectedChainId.toString(16)}` : IEXEC_CHAIN_ID;
+  const targetChainId = selectedChainId
+    ? `0x${selectedChainId.toString(16)}`
+    : IEXEC_CHAIN_ID;
 
   if (currentChainId !== targetChainId) {
-    const chain = SUPPORTED_CHAINS.find(c => c.id === selectedChainId);
+    const chain = SUPPORTED_CHAINS.find((c) => c.id === selectedChainId);
     if (!chain) {
       throw new Error(`Chain with ID ${selectedChainId} not supported`);
     }

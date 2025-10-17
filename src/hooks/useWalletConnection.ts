@@ -1,5 +1,8 @@
 import { useEffect, useState } from 'react';
-import { cleanDataProtectorClient, initDataProtectorClient } from '../externals/dataProtectorClient';
+import {
+  cleanDataProtectorClient,
+  initDataProtectorClient,
+} from '../externals/dataProtectorClient';
 
 export function useWalletConnection() {
   const [isConnected, setIsConnected] = useState(false);
@@ -27,7 +30,10 @@ export function useWalletConnection() {
           const parsedChainId = parseInt(newChainId, 16);
           setChainId(parsedChainId);
 
-          initDataProtectorClient({ provider: window.ethereum, chainId: parsedChainId });
+          initDataProtectorClient({
+            provider: window.ethereum,
+            chainId: parsedChainId,
+          });
         }
       } catch (error) {
         console.error('Error checking connection:', error);
@@ -41,7 +47,10 @@ export function useWalletConnection() {
         setIsConnected(true);
         setAddress(accounts[0]);
         if (chainId) {
-          initDataProtectorClient({ provider: window.ethereum, chainId: chainId });
+          initDataProtectorClient({
+            provider: window.ethereum,
+            chainId: chainId,
+          });
         }
       } else {
         setIsConnected(false);
@@ -53,7 +62,10 @@ export function useWalletConnection() {
     const handleChainChanged = (newChainHexId: string) => {
       const newChainId = parseInt(newChainHexId, 16);
       setChainId(newChainId);
-      initDataProtectorClient({ provider: window.ethereum, chainId: newChainId });
+      initDataProtectorClient({
+        provider: window.ethereum,
+        chainId: newChainId,
+      });
     };
 
     window.ethereum.on('accountsChanged', handleAccountsChanged);
@@ -61,7 +73,10 @@ export function useWalletConnection() {
 
     return () => {
       if (window.ethereum.removeListener) {
-        window.ethereum.removeListener('accountsChanged', handleAccountsChanged);
+        window.ethereum.removeListener(
+          'accountsChanged',
+          handleAccountsChanged
+        );
         window.ethereum.removeListener('chainChanged', handleChainChanged);
       }
     };

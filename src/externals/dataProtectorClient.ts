@@ -14,7 +14,7 @@ export function cleanDataProtectorClient() {
 
 export async function initDataProtectorClient({
   provider,
-  chainId
+  chainId,
 }: {
   provider?: unknown;
   chainId?: number;
@@ -27,7 +27,9 @@ export async function initDataProtectorClient({
   // Only reinitialize if chain has changed
   if (currentChainId !== chainId) {
     try {
-      const dataProtectorParent = new IExecDataProtector(provider as Eip1193Provider);
+      const dataProtectorParent = new IExecDataProtector(
+        provider as Eip1193Provider
+      );
       iExecDataProtectorCore = dataProtectorParent.core;
       currentChainId = chainId || null;
     } catch (error) {
@@ -40,7 +42,9 @@ export async function initDataProtectorClient({
 
 export async function getDataProtectorCoreClient(): Promise<IExecDataProtectorCore> {
   if (!iExecDataProtectorCore) {
-    throw new Error('iExec SDK not initialized. Please connect your wallet first.');
+    throw new Error(
+      'iExec SDK not initialized. Please connect your wallet first.'
+    );
   }
   return iExecDataProtectorCore;
 }

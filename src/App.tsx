@@ -1,21 +1,24 @@
-import { useState } from 'react';
 import { Address } from '@iexec/dataprotector';
-import {
-  AddressOrEnsName,
-  checkIsConnected,
-  IEXEC_EXPLORER_URL,
-  WEB3MAIL_APP_ENS,
-  SUPPORTED_CHAINS,
-} from './utils/utils.ts';
-import { getDataProtectorCoreClient, initDataProtectorClient } from './externals/dataProtectorClient';
-import { useWalletConnection } from './hooks/useWalletConnection';
+import { useState } from 'react';
 import './App.css';
 import loader from './assets/loader.gif';
 import successIcon from './assets/success.png';
+import {
+  getDataProtectorCoreClient,
+  initDataProtectorClient,
+} from './externals/dataProtectorClient';
+import { useWalletConnection } from './hooks/useWalletConnection';
+import {
+  AddressOrEnsName,
+  checkIsConnected,
+  SUPPORTED_CHAINS,
+  WEB3MAIL_APP_ENS,
+} from './utils/utils.ts';
+import { NULL_ADDRESS } from 'iexec/utils';
 
 export default function App() {
   const { isConnected, address, chainId } = useWalletConnection();
-  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[0].id);
+  const [selectedChain, setSelectedChain] = useState(SUPPORTED_CHAINS[2].id);
   const [protectedData, setProtectedData] = useState<Address | ''>('');
   const [authorizedUser, setAuthorizedUser] = useState<AddressOrEnsName | ''>(
     ''
@@ -43,7 +46,7 @@ export default function App() {
     }
 
     // Find the chain configuration
-    const chain = SUPPORTED_CHAINS.find(c => c.id === targetChainId);
+    const chain = SUPPORTED_CHAINS.find((c) => c.id === targetChainId);
     if (!chain) {
       throw new Error(`Chain with ID ${targetChainId} not supported`);
     }
@@ -81,7 +84,9 @@ export default function App() {
     }
   };
 
-  const handleChainChange = async (event: React.ChangeEvent<HTMLSelectElement>) => {
+  const handleChainChange = async (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
     const newChainId = Number(event.target.value);
     setSelectedChain(newChainId);
 
@@ -112,7 +117,7 @@ export default function App() {
       // Reinitialize the DataProtector client with the correct chain
       await initDataProtectorClient({
         provider: window.ethereum,
-        chainId: selectedChain
+        chainId: selectedChain,
       });
     } catch (err) {
       setErrorProtect('Please install MetaMask or switch to the correct chain');
@@ -128,11 +133,10 @@ export default function App() {
     try {
       setLoadingProtect(true);
       const client = await getDataProtectorCoreClient();
-      const protectedDataResponse =
-        await client.protectData({
-          data,
-          name,
-        });
+      const protectedDataResponse = await client.protectData({
+        data,
+        name,
+      });
       setProtectedData(protectedDataResponse.address as Address);
       setErrorProtect('');
     } catch (error) {
@@ -141,9 +145,13 @@ export default function App() {
 
       // Provide more specific error messages
       if (String(error).includes('Internal JSON-RPC error')) {
-        setErrorProtect('RPC Error: Please check your network connection and ensure you have sufficient xRLC for gas fees on Bellecour');
+        setErrorProtect(
+          'RPC Error: Please check your network connection and ensure you have sufficient xRLC for gas fees on Bellecour'
+        );
       } else if (String(error).includes('insufficient funds')) {
-        setErrorProtect('Insufficient funds: Please ensure you have enough xRLC tokens for gas fees');
+        setErrorProtect(
+          'Insufficient funds: Please ensure you have enough xRLC tokens for gas fees'
+        );
       } else if (String(error).includes('user rejected')) {
         setErrorProtect('Transaction rejected by user');
       } else {
@@ -162,7 +170,7 @@ export default function App() {
       // Reinitialize the DataProtector client with the correct chain
       await initDataProtectorClient({
         provider: window.ethereum,
-        chainId: selectedChain
+        chainId: selectedChain,
       });
     } catch (err) {
       setErrorGrant('Please install MetaMask or switch to the correct chain');
@@ -179,7 +187,7 @@ export default function App() {
       await client.grantAccess({
         protectedData,
         authorizedUser: userAddress,
-        authorizedApp: WEB3MAIL_APP_ENS,
+        authorizedApp: SUPPORTED_CHAINS.find((c) => c.id === selectedChain)?.web3mailAppAddress as Address,
         numberOfAccess,
       });
       setAuthorizedUser(userAddress);
@@ -200,7 +208,7 @@ export default function App() {
       // Reinitialize the DataProtector client with the correct chain
       await initDataProtectorClient({
         provider: window.ethereum,
-        chainId: selectedChain
+        chainId: selectedChain,
       });
     } catch (err) {
       setErrorRevoke('Please install MetaMask or switch to the correct chain');
@@ -210,12 +218,11 @@ export default function App() {
     try {
       setLoadingRevoke(true);
       const client = await getDataProtectorCoreClient();
-      const allGrantedAccess =
-        await client.getGrantedAccess({
-          protectedData,
-          authorizedUser,
-          authorizedApp: WEB3MAIL_APP_ENS,
-        });
+      const allGrantedAccess = await client.getGrantedAccess({
+        protectedData,
+        authorizedUser,
+        authorizedApp: SUPPORTED_CHAINS.find((c) => c.id === selectedChain)?.web3mailAppAddress as Address,
+      });
       if (allGrantedAccess.count === 0) {
         throw new Error('No access to revoke');
       }
@@ -242,7 +249,9 @@ export default function App() {
     setName(event.target.value);
   };
 
-  const handleNumberOfAccessChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleNumberOfAccessChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setNumberOfAccess(Number(event.target.value));
   };
 
@@ -258,13 +267,31 @@ export default function App() {
   return (
     <>
       {/* Chain Selection */}
-      <div style={{ marginBottom: '20px', padding: '20px', border: '1px solid #ddd', borderRadius: '8px' }}>
-        <h2 style={{ margin: '0 0 10px 0', display: 'flex', alignItems: 'center', gap: '10px' }}>
+      <div
+        style={{
+          marginBottom: '20px',
+          padding: '20px',
+          border: '1px solid #ddd',
+          borderRadius: '8px',
+        }}
+      >
+        <h2
+          style={{
+            margin: '0 0 10px 0',
+            display: 'flex',
+            alignItems: 'center',
+            gap: '10px',
+          }}
+        >
           Chain Selection
           <select
             value={selectedChain}
             onChange={handleChainChange}
-            style={{ padding: '5px', borderRadius: '4px', border: '1px solid #ccc' }}
+            style={{
+              padding: '5px',
+              borderRadius: '4px',
+              border: '1px solid #ccc',
+            }}
           >
             {SUPPORTED_CHAINS.map((chain) => (
               <option key={chain.id} value={chain.id}>
@@ -274,22 +301,28 @@ export default function App() {
           </select>
         </h2>
         <p style={{ margin: '5px 0', color: '#666' }}>
-          Selected chain: {SUPPORTED_CHAINS.find(c => c.id === selectedChain)?.name} (ID: {selectedChain})
+          Selected chain:{' '}
+          {SUPPORTED_CHAINS.find((c) => c.id === selectedChain)?.name} (ID:{' '}
+          {selectedChain})
         </p>
 
         {/* Wallet Status */}
         <div style={{ marginTop: '10px', fontSize: '14px' }}>
           <p style={{ margin: '2px 0' }}>
-            <strong>Wallet Status:</strong> {isConnected ? 'Connected' : 'Disconnected'}
+            <strong>Wallet Status:</strong>{' '}
+            {isConnected ? 'Connected' : 'Disconnected'}
           </p>
           {address && (
             <p style={{ margin: '2px 0' }}>
-              <strong>Address:</strong> {address.slice(0, 6)}...{address.slice(-4)}
+              <strong>Address:</strong> {address.slice(0, 6)}...
+              {address.slice(-4)}
             </p>
           )}
           {chainId && (
             <p style={{ margin: '2px 0' }}>
-              <strong>Current MetaMask Chain:</strong> {SUPPORTED_CHAINS.find(c => c.id === chainId)?.name || `Chain ${chainId}`}
+              <strong>Current MetaMask Chain:</strong>{' '}
+              {SUPPORTED_CHAINS.find((c) => c.id === chainId)?.name ||
+                `Chain ${chainId}`}
             </p>
           )}
         </div>
@@ -347,7 +380,10 @@ export default function App() {
             />
             Your data has been protected!
             <a
-              href={IEXEC_EXPLORER_URL + protectedData}
+              href={
+                SUPPORTED_CHAINS.find((c) => c.id === selectedChain)
+                  ?.explorerUrl + protectedData
+              }
               rel="noreferrer"
               target="_blank"
             >
